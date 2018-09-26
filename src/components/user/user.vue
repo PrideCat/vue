@@ -319,6 +319,10 @@
       },
       prompt(){
         this.$message.warning(this.lang[this.lang.lang].en63);
+      },
+      toMall(){
+        // delete sessionStorage.userStorage;
+        window.location.href='../mall/index.html';
       }
     },
     watch: {
