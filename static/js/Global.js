@@ -178,12 +178,12 @@ const menuArray = [{
         //   en:"Commodity Management",
         //   url: "commodityRetrive.html"
         // },
-        // {
-        //   index:"8-7",
-        //   cn:"商品訂單管理",
-        //   en:"Product Order Management",
-        //   url: "commodityOrderRetrive.html"
-        // },
+        {
+          index:"8-7",
+          cn:"商品訂單管理",
+          en:"Product Order Management",
+          url: "commodityOrderRetrive.html"
+        },
         // {
         //   index:"8-8",
         //   cn:"新聞管理",

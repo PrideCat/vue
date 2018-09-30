@@ -78,6 +78,9 @@
         lang = global.lang,
         langJson = global.langJson.login;
       langJson.lang = lang;
+
+      
+
       return {
         lang: langJson,
         uid,
@@ -127,12 +130,17 @@
             // this.$message.success(langJson.success);
             this.islogin = false;
             sessionStorage.setItem("userInfoStorage", JSON.stringify(res));
+            sessionStorage.setItem("userStorage", JSON.stringify({uid, password}));
+            if(sessionStorage.getItem("inMellToLogin")=="1"){
+              delete sessionStorage.inMellToLogin;
+              window.location.href="../mall/index.html";
+            }
             if(sessionStorage.getItem("goOrder")=="1"){
               this.$router.push('/user/order');
-            }
-            if(sessionStorage.getItem("inMellToLogin")=="1"){
-              sessionStorage.setItem("userStorage", JSON.stringify({uid, password}));
-              window.location.href="../mall/index.html";
+              delete sessionStorage.goOrder;
+            }else if(sessionStorage.getItem("toMember")=="1"){
+              this.$router.push('/user/index');
+              delete sessionStorage.toMember;
             }
             if(this.global.userInfo.agreement==0&&!(this.global.userInfo.type==0&&(this.global.userInfo.rank==1||this.global.userInfo.rank==2))){
               this.$router.push('/user/agreement');
@@ -162,6 +170,12 @@
           this.winup.isShow = false;
         });
       }
+    },
+    mounted(){
+      
+    },
+    created(){
+      
     }
   }
 </script>

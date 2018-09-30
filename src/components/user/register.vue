@@ -475,7 +475,7 @@
         const dataArr = this.winup2.data;
         const i = Math.ceil(index/2)-1;
         const track = (index+1)%2;
-        this.form.suid = dataArr[i].mobile;
+        this.form.suid = dataArr[i].phone;
         this.suidChange();
         this.form.track = track.toString();
         this.winup2.isShow=false;

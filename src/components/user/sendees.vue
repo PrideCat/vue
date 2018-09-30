@@ -16,8 +16,8 @@
     <p style="margin:10px 0;">{{lang[lang.lang].uid}}：{{thisUid}}</p>
     <el-table :class="lang.lang=='en'?'langIsEn':''" :data="tableData" border style="width: 100%;">
       <el-table-column prop="title" label="" align="center" width="240"></el-table-column>
-      <el-table-column prop="partA" :label="lang.lang=='cn'?'A區':'Area A'" align="center" width="80"></el-table-column>
-      <el-table-column prop="partB" :label="lang.lang=='cn'?'B區':'Area B'" align="center" width="80"></el-table-column>
+      <el-table-column prop="partA" :label="lang.lang=='cn'?'A區':'Area A'" align="center"></el-table-column>
+      <el-table-column prop="partB" :label="lang.lang=='cn'?'B區':'Area B'" align="center"></el-table-column>
     </el-table>
     <div class="tree" v-if="treeDataIsShow">
       <ol>

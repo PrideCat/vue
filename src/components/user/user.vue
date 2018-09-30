@@ -72,7 +72,7 @@
               </router-link>
             </li>
             <li>
-              <div @click="prompt">
+              <div @click="toMall">
                 <p><img src="../../../static/img/shopping.png" height="28" width="28"/></p>
                 <p>{{lang[lang.lang].en52}}</p>
               </div>
@@ -354,22 +354,27 @@
       };
       console.log(this.userInfo.authority);
       if(this.userInfo.authority!=2){
-        this.menuData[5].children[4].isHide = true;
+        try { this.menuData[6].children[4].isHide = true; } catch (error) {}
       }
     },
     created(){
-      if(this.userInfo.type==0&&(this.userInfo.rank==1||this.userInfo.rank==2)){
-        this.menuData[1].isHide = true;
-        this.menuData[4].isHide = true;
-        this.menuData[2].children[1].isHide = true;
-        this.menuData[2].children[5].isHide = true;
-        this.menuData[2].children[6].isHide = true;
-      }else{
-        this.menuData[1].isHide = false;
-        this.menuData[4].isHide = false;
-        this.menuData[2].children[1].isHide = false;
-        this.menuData[2].children[5].isHide = false;
-        this.menuData[2].children[6].isHide = false;
+      try {
+        if(this.userInfo.type==0&&(this.userInfo.rank==1||this.userInfo.rank==2)){
+          this.menuData[1].isHide = true;
+          this.menuData[5].isHide = true;
+          this.menuData[2].children[1].isHide = true;
+          this.menuData[2].children[5].isHide = true;
+          this.menuData[2].children[6].isHide = true;
+        }else{
+          this.menuData[1].isHide = false;
+          this.menuData[5].isHide = false;
+          this.menuData[2].children[1].isHide = false;
+          this.menuData[2].children[5].isHide = false;
+          this.menuData[2].children[6].isHide = false;
+        }
+      } catch (error) {}
+      if(sessionStorage.getItem("toMember")=="1"){
+        delete sessionStorage.toMember;
       }
     }
   }

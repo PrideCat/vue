@@ -496,7 +496,8 @@
         //     clearInterval(timer);
         //   };
         // },200);
-        numAutoPlusAnimation(this.$refs.money, {
+
+        if(income!=0)numAutoPlusAnimation(this.$refs.money, {
           time: 1000,
           num: income,
           regulator: income/10

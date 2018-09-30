@@ -65,6 +65,7 @@
               <li><p><span>{{lang[lang.lang].en9}}</span><b>{{winup.data.data.createTime}}</b></p></li>
               <li><p><span>{{lang[lang.lang].en90}}</span><b>{{winup.data.data.money}}</b></p></li>
               <li><p><span>{{lang[lang.lang].en2}}</span><b>{{winup.data.data.trace==0?lang[lang.lang].en3:(winup.data.data.trace==1?lang[lang.lang].en127:(winup.data.data.trace==2?lang[lang.lang].en128:(winup.data.data.trace==3?lang[lang.lang].en129:lang[lang.lang].en130)))}}</b></p></li>
+              <li><p><span>{{lang.lang=='cn'?'收貨方式':'Receiving Method'}}</span><b>{{winup.data.data.deliveryWay==1?(lang.lang=='cn'?'物流收貨':'Logistics Receipt'):(lang.lang=='cn'?'到店自提':'Come to the store')}}</b></p></li>
               <li><p><span>{{lang[lang.lang].en92}}</span><b>{{winup.data.data.remark}}</b></p></li>
               <li><p><span>{{lang[lang.lang].en132}}</span><b>{{winup.data.data.payTime}}</b></p></li>
               <li><p><span>{{lang[lang.lang].en133}}</span><b>{{winup.data.data.deliveryTime}}</b></p></li>
@@ -118,8 +119,8 @@
         userInfo = global.userInfo;
       langJson.lang = lang;
       let mDate = new Date(),mYear,mMonth,mDay;
-      mDate.setDate(0);
       mDate.setMonth(mDate.getMonth()+1);
+      mDate.setDate(0);
       mYear = mDate.getFullYear();
       mMonth = mDate.getMonth()+1;
       mMonth = mMonth<10?`0${mMonth}`:mMonth;
@@ -169,10 +170,16 @@
         this.winup.isShow=false;
         if(orderNumber){
           console.log(orderNumber,logistics);
+          if(this.winup.data.data.deliveryWay==1&&!logistics){
+              this.$message.error(this.lang.lang=="cn"?"請輸入物流單號":"Please enter the logistics order number");
+              this.winup.isShow=true;
+              return;
+          }
           this.$confirm(this.lang[this.lang.lang].en142).then(_ => {
             this.api(this, '/manager/commodity/order/delivery', {orderNumber,logistics}, res => {
               console.log(res);
               this.$message.success(this.lang[this.lang.lang].en143);
+              this.init();
             });
           });
         }

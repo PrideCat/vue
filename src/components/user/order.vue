@@ -306,6 +306,9 @@ export default {
     this.$root.$on("selectLang", res => {
       this.lang.lang = res;
     });
+    if(sessionStorage.getItem("goOrder")=="1"){
+      delete sessionStorage.goOrder;
+    }
   }
 };
 </script>

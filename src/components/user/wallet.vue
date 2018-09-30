@@ -36,7 +36,7 @@
         <el-table-column prop="createTime" :label="lang[lang.lang].en48" align="center" width="180"></el-table-column>
         <el-table-column prop="type" :label="lang[lang.lang].en89" align="center" width="180">
           <template slot-scope="scope">
-            <span>{{ scope.row.type==0?lang[lang.lang].Recharge:(scope.row.type==1?lang[lang.lang].en81:lang[lang.lang].en82) }}</span>
+            <span>{{ scope.row.type==1?lang[lang.lang].Recharge:(scope.row.type==2?lang[lang.lang].en81:(scope.row.type==3?lang[lang.lang].en82:(scope.row.type==4?lang[lang.lang].en83:(scope.row.type==5?lang[lang.lang].en84:'')))) }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="money" :label="lang[lang.lang].en90" align="center" width="180"></el-table-column>
@@ -91,12 +91,13 @@
         userInfo = global.userInfo;
       langJson.lang = lang;
       let mDate = new Date(),mYear,mMonth,mDay;
-      mDate.setDate(0);
       mDate.setMonth(mDate.getMonth()+1);
+      mDate.setDate(0);
       mYear = mDate.getFullYear();
       mMonth = mDate.getMonth()+1;
       mMonth = mMonth<10?`0${mMonth}`:mMonth;
       mDay = mDate.getDate();
+      mDay = mDay>10?mDay:`0${mDay}`;
       return {
         lang: langJson,
         collapseAttr,
