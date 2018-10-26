@@ -3,7 +3,7 @@
     <div v-title :data-title="lang[lang.lang].home"></div>
     <div>
       <marquee direction="left" scrollamount="3" scrolldelay="0" style="height:32px;line-height:32px;background:#332c1d;color:#bfa284;font-size:14px;">
-        <router-link tag="span" v-for="(item,index) in announceRetrive" :style="index?'cursor:pointer;margin-left: 10em;':'cursor:pointer;'" :to="{name:'announce'}">({{item.createTime}}) {{item.name}}</router-link>
+        <router-link tag="span" v-for="(item,index) in announceRetrive" :key="index" :style="index?'cursor:pointer;margin-left: 10em;':'cursor:pointer;'" :to="{name:'announce'}">({{item.createTime}}) {{item.name}}</router-link>
       </marquee>
       <ul class="nowTime">
         <li>
@@ -23,6 +23,11 @@
       </ul>
       <div class="amountDetails">
         <div>
+          <p style="padding:20px 20px 0 0;text-align:right;">
+            <router-link tag="a" style="color: #555;font-size: 14px;" :to="{name:'retrive'}">
+              {{lang.lang=="cn"?"獎金管理":"Bonus Management"}}
+            </router-link>
+          </p>
           <ul>
             <li>
               <ol>
@@ -50,12 +55,12 @@
                   <p>$ {{statistics.weekReward[0].money||0}}</p>
                 </li>
                 <li>
-                  <p>{{lang[lang.lang].en8}}</p>
-                  <p>$ {{statistics.weekReward[1].money||0}}</p>
-                </li>
-                <li>
                   <p>{{lang[lang.lang].en9}}</p>
                   <p>$ {{statistics.weekReward[2].money||0}}</p>
+                </li>
+                <li>
+                  <p>{{lang[lang.lang].en8}}</p>
+                  <p>$ {{statistics.weekReward[1].money||0}}</p>
                 </li>
                 <li>
                   <p>{{lang[lang.lang].en10}}</p>

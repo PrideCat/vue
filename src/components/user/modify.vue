@@ -60,11 +60,11 @@
         <el-form-item :label="lang[lang.lang].EnglishName">
           <label>{{userInfo.EnglishName}}</label>
         </el-form-item>
-        <el-form-item :label="lang[lang.lang].identification">
-          <label>{{userInfo.identification}}</label>
-        </el-form-item>
         <el-form-item :label="lang[lang.lang].nickname">
           <el-input v-model="form.nickname" :placeholder="lang[lang.lang].editnickname"></el-input>
+        </el-form-item>
+        <el-form-item :label="lang[lang.lang].identification">
+          <label>{{userInfo.identification}}</label>
         </el-form-item>
         <el-form-item :label="lang[lang.lang].birthday">
           <el-date-picker v-model="form.birthday" type="date" :placeholder="lang[lang.lang].editbirthday"></el-date-picker>

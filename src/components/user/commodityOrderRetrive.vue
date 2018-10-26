@@ -136,8 +136,8 @@
           trace: "2",
           orderNumber: "",
           uid: "",
-          startDate:`${mYear}-${mMonth}-01`,
-          endDate:`${mYear}-${mMonth}-${mDay}`,
+          startDate:`${mYear}-${mMonth-1}-01`,
+          endDate:`${mYear}-${mMonth}-01`,
           no: 1, 
           size: 10
         },

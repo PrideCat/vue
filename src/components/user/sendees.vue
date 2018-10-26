@@ -21,7 +21,7 @@
     </el-table>
     <div class="tree" v-if="treeDataIsShow">
       <ol>
-        <li v-for="(item,index) in treeData">
+        <li v-for="(item,index) in treeData" :key="index">
           <div :class="item?'has':''">
             <b :style="item?'cursor:pointer;':'cursor:default;'" @click="item&&index?place(item.uid):''">
               <p>{{item?item.uid:""}}</p>
@@ -48,7 +48,7 @@
   };
 
   const date = new Date();
-  date.setDate(date.getDate() - date.getDay() - 2);
+  date.setDate(date.getDate() - date.getDay() - 1);
   const weeks = [];
   const getWeek = function () {
     const endDate = date.toLocaleDateString();
@@ -99,7 +99,7 @@
           {title:langJson[lang].Week + "2（" + weeks[1] + "）",partA: "", partB: ""},
           {title:langJson[lang].Week + "1（" + weeks[0] + "）",partA: "", partB: ""},
           {title:langJson[lang].ThisWeek + "（BV）",partA: "", partB: ""},
-          {title:langJson[lang].Unsettlement + "（BV）",partA: "", partB: ""}
+          // {title:langJson[lang].Unsettlement + "（BV）",partA: "", partB: ""}
         ],
         treeData:[,,,,,,,],
         treeDataIsShow:false
@@ -120,11 +120,11 @@
           t.tableData[0].partA = res.data.subordinateA;
           t.tableData[1].partA = res.data.integralA;
           t.tableData[2].partA = res.data.integralA - res.data.accumulation;
-          t.tableData[8].partA = res.data.unliquidatedA;
+          // t.tableData[8].partA = res.data.unliquidatedA;
           t.tableData[0].partB = res.data.subordinateB;
           t.tableData[1].partB = res.data.integralB;
           t.tableData[2].partB = res.data.integralB - res.data.accumulation;
-          t.tableData[8].partB = res.data.unliquidatedB;
+          // t.tableData[8].partB = res.data.unliquidatedB;
           t.tableData[3].partA = 0;
           t.tableData[4].partA = 0;
           t.tableData[5].partA = 0;

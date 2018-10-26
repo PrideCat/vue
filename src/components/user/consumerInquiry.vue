@@ -31,14 +31,14 @@
                   <td>{{lang[lang.lang].uid}}</td>
                   <td>{{winup.data.uid}}</td>
                 </tr>
-                <tr>
+                <!-- <tr>
                   <td>{{lang[lang.lang].en3}}:</td>
                   <td>{{nationalitysWin[winup.data.country][lang.lang]}}</td>
                 </tr>
                 <tr>
                   <td>{{lang[lang.lang].en4}}:</td>
                   <td>{{nationalitys[winup.data.nationality][lang.lang]}}</td>
-                </tr>
+                </tr> -->
               </tbody>
             </table>
           </li>

@@ -111,10 +111,10 @@
       // mMonth = mMonth<10?`0${mMonth}`:mMonth;
       // mDay = mDate.getDate();
       let searchDate = new Date();
-      searchDate.setDate(searchDate.getDate()+1);
-      let searchEndDate = searchDate.getFullYear()+"-"+getNumber(searchDate.getMonth()+1)+"-"+searchDate.getDate();
+      searchDate.setDate(1);
+      let searchEndDate = searchDate.getFullYear()+"-"+getNumber(searchDate.getMonth()+1)+"-"+getNumber(searchDate.getDate());
       searchDate.setDate(searchDate.getDate()-30);
-      let searchStartDate = searchDate.getFullYear()+"-"+getNumber(searchDate.getMonth()+1)+"-"+searchDate.getDate();
+      let searchStartDate = searchDate.getFullYear()+"-"+getNumber(searchDate.getMonth()+1)+"-"+getNumber(searchDate.getDate());
       return {
         lang: langJson,
         collapseAttr,

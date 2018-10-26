@@ -2,7 +2,7 @@
   <el-form ref="form" :model="form" :rules="rules" label-width="120px" label-position="right">
     <div v-title :data-title="lang[lang.lang].en1"></div>
     <div class="fromBox">
-      <p class="form-title"><span>{{lang[lang.lang].editPassword}}</span></p>
+      <p class="form-title"><span>{{lang[lang.lang].en8}}</span></p>
       <div :style="collapseAttr.formBoxStyle">
         <el-form-item :label="lang[lang.lang].oldPassword" prop="oldPassword">
           <el-input type="password" v-model="form.oldPassword"
