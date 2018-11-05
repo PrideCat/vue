@@ -108,7 +108,7 @@
           account:'0',
           type:'1',
           startDate:`${mYear}-${mMonth}-01`,
-          endDate:`${mYear}-${mMonth}-${mDay}`
+          endDate:`${mYear}-${mMonth+1}-01`
         },
         record:0,
         tableData:[],

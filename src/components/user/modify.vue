@@ -24,7 +24,7 @@
           </div>
           <div>
             <el-form-item :label="lang[lang.lang].ruid">
-              <label>{{userInfo.rmobile}}</label>
+              <label>{{userInfo.ruid}}</label>
             </el-form-item>
           </div>
         </div>
@@ -86,7 +86,10 @@
           <el-input v-model="form.mobile" :placeholder="lang[lang.lang].editmobile"></el-input>
         </el-form-item>
         <el-form-item :label="lang[lang.lang].email" prop="email">
-          <el-input v-model="form.email" :placeholder="lang[lang.lang].editemail"></el-input>
+          <el-input v-model="form.email" :placeholder="lang[lang.lang].editemail"></el-input><b v-if="hasEmail" style="border:1px solid #ccc;font-size:12px;padding:1px 5px;background:#f1f1f1;color:#606266;cursor:pointer;position: relative;right: 72px;" @click="getCode" ref="email">{{lang.lang=='cn'?"獲取驗證碼":'get verification code'}}</b>
+        </el-form-item>
+        <el-form-item :label="lang.lang=='cn'?'驗證碼':'Verification Code'" prop="code" v-if="hasCode">
+          <el-input v-model="form.code" :placeholder="lang.lang=='cn'?'請輸入驗證碼':'please enter verification code'"></el-input>
         </el-form-item>
         <!-- <el-form-item :label="lang[lang.lang].seat">
           <el-input v-model="form.seat" :placeholder="lang[lang.lang].editseat"></el-input>
@@ -126,6 +129,8 @@
         lang: langJson,
         userInfo,
         area,
+        hasEmail:false,
+        hasCode:false,
         form: {
           nickname: userInfo.nickname,
           birthday: userInfo.birthday,
@@ -134,6 +139,7 @@
           phone: userInfo.phone,
           mobile: userInfo.mobile,
           email: userInfo.email,
+          code: "",
           seat: userInfo.seat,
           address: userInfo.address,
           postal: userInfo.postal
@@ -155,31 +161,40 @@
           }],
           email: [
             {required: true, message: langJson[lang].editemail, trigger: 'blur'}, {
-              type: 'email',
-              message: langJson[lang].editemail1,
-              trigger: ['blur', 'change']
+              validator:(rule, value, callback, source, options)=>{
+                var errors=[];
+                if(!new RegExp("^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$").test(this.form.email)){
+                  errors.push(new Error(langJson[lang].editemail1));
+                  this.hasEmail=false;
+                } else
+                  this.hasEmail=true;
+                callback(errors);
+              }
             }
-          ]
+          ],
+          code: [{required: true, message: lang=='cn'?'請輸入驗證碼':'please enter verification code', trigger: 'blur'}],
         }
       };
     },
     methods: {
       onSubmit: function () {
         var t = this;
+        let json = {
+          nickname: t.form.nickname,
+          birthday: t.form.birthday,
+          sex: t.form.sex*1,
+          phone: t.form.phone,
+          mobile: t.form.mobile,
+          email: t.form.email,
+          seat: t.form.seat,
+          postal: t.form.postal,
+          wechatNumber: t.form.wechatNumber,
+          address: t.form.address
+        };
         this.$refs.form.validate(valid => {
           if (valid) {
-            this.api(this, "/user/modify", {
-              nickname: t.form.nickname,
-              birthday: t.form.birthday,
-              sex: t.form.sex*1,
-              phone: t.form.phone,
-              mobile: t.form.mobile,
-              email: t.form.email,
-              seat: t.form.seat,
-              postal: t.form.postal,
-              wechatNumber: t.form.wechatNumber,
-              address: t.form.address
-            }, res => {
+            if(this.hasCode)json.code=t.form.code;
+            this.api(this, "/user/modify", json, res => {
               this.$message.success(this.lang[this.lang.lang].submitTxt);
               this.api(this, '/user/msg', '', res => {
                 this.global.userInfo = res;
@@ -192,6 +207,32 @@
             console.log('error submit!!');
             return false;
           }
+        });
+      },
+      getCode(){
+        let emailDom = this.$refs.email;
+        let text = emailDom.innerText;
+        let num = 180;
+        let timer=null;
+        let error =_=>{
+          clearInterval(timer);
+          emailDom.innerText = text;
+          emailDom.style.right = "72px";
+        };
+        let run = _=>{
+          num--;
+          emailDom.innerText = num;
+          if(!num)error();
+        };
+        if(!isNaN(text))return;
+        this.hasCode=true;
+        timer = setInterval(run,1000);
+        run();
+        emailDom.style.right = "36px";
+        this.api(this, "/user/email", {email:this.form.email}, res => {
+          
+        },res=>{
+          if(res=='failure')this.$message.error("發送郵箱失敗，請檢查郵箱號是否正確");
         });
       }
     },

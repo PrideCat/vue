@@ -350,7 +350,7 @@
       if(this.activeIndex.split("-").length>1)this.theOpenMenuI = this.activeIndex.split("-")[0];
       document.onscroll = _ => {
         let scrollTop = (document.documentElement||document.body).scrollTop -140;//125
-        $(".el-aside > .el-menu").css("top",scrollTop>0?scrollTop*(100/110):0);
+        $(".el-aside > .el-menu").css("top",scrollTop>0?scrollTop:0);//*(100/110)
       };
       console.log(this.userInfo.authority);
       if(this.userInfo.authority!=2){

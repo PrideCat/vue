@@ -72,15 +72,15 @@
                   <p>{{lang[lang.lang].en67}}</p>
                   <p>$ {{statistics.weekReward[4].money||0}}</p>
                 </li>
-                <li>
+                <li style="opacity: 0;">
                   <p>{{lang[lang.lang].en70}}</p>
                   <p>$ {{statistics.weekReward[5].money||0}}</p>
                 </li>
-                <li>
+                <li style="opacity: 0;">
                   <p>{{lang[lang.lang].en68}}</p>
                   <p>$ {{statistics.weekReward[6].money||0}}</p>
                 </li>
-                <li>
+                <li style="opacity: 0;">
                   <p>{{lang[lang.lang].en69}}</p>
                   <p>$ {{statistics.weekReward[7].money||0}}</p>
                 </li>
@@ -387,9 +387,17 @@
         console.log(res)
         console.log(this.statistics)
 
+        this.statistics.weekReward=[{},{},{},{},{},{},{},{}];
+        res.weekReward.forEach(v=>{
+          this.statistics.weekReward[v.type]=v;
+        });
 
          // stageIncreaseMember:[{count:0},{count:0}],
          //  weekIncreaseMember:[{count:0},{count:0}],
+        //  console.log("stageIncreaseMember",JSON.stringify(res.stageIncreaseMember));
+        //  console.log("weekIncreaseMember",JSON.stringify(res.weekIncreaseMember));
+        res.stageIncreaseMember.sort((a,b)=>a.rank>b.rank);
+        res.weekIncreaseMember.sort((a,b)=>a.rank>b.rank);
         
         for (let i = 1; i < 6; i++) {
           stageIncreaseMemberTotal += res.stageIncreaseMember[i]?res.stageIncreaseMember[i].count:0;
@@ -490,7 +498,8 @@
           v.week = returnWeek(v.week);
           v.allShop = v.pathA+v.pathB;
         });
-    
+
+        this.statistics.weekReward.sort((a,b)=>a.type>b.type);
         // this.statistics.data.income=0;
         // timer = setInterval(_=>{
         //   console.log(this.statistics.data.income);

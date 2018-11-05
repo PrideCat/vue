@@ -461,6 +461,7 @@
 				    min-width: 100%;
     				text-align: left;
 				}
+				#retrive .searchBox button{display:none;}
 			</style>`;
     	return {isCollapse,styleDom}
     },

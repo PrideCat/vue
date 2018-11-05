@@ -52,7 +52,10 @@
             <el-input v-model="form.EnglishName" :placeholder="lang[lang.lang].editEnglishName"></el-input>
           </el-form-item>
           <el-form-item :label="lang[lang.lang].email" prop="email">
-            <el-input v-model="form.email" :placeholder="lang[lang.lang].editemail"></el-input>
+            <el-input v-model="form.email" :placeholder="lang[lang.lang].editemail"></el-input><b v-if="hasEmail" style="border:1px solid #ccc;font-size:12px;padding:1px 5px;background:#f1f1f1;color:#606266;cursor:pointer;position: relative;right: 72px;" @click="getCode" ref="email">{{lang.lang=='cn'?"獲取驗證碼":'get verification code'}}</b>
+          </el-form-item>
+          <el-form-item :label="lang.lang=='cn'?'驗證碼':'Verification Code'" prop="code" v-if="hasCode">
+            <el-input v-model="form.code" :placeholder="lang.lang=='cn'?'請輸入驗證碼':'please enter verification code'"></el-input>
           </el-form-item>
           <el-form-item :label="lang[lang.lang].phone" prop="phone">
             <!-- <el-select v-model="form.nationality1" :placeholder="lang[lang.lang].editnationality" @change="nationalityChange1" style="width: 100px;">
@@ -84,11 +87,11 @@
         <p class="form-title"><span>{{lang[lang.lang].edituserinfo2}}</span></p>
         <div :style="collapseAttr.formBoxStyle">
           <el-form-item :label="lang[lang.lang].ruid" prop="ruid">
-            <el-input v-model="form.ruid" @input="ruidChange" :placeholder="lang[lang.lang].editruid"></el-input>
+            <el-autocomplete v-model="form.ruid" :fetch-suggestions="querySearch" :trigger-on-focus="false" :placeholder="lang[lang.lang].editruid" @select="ruidChange"></el-autocomplete>
           </el-form-item>
-          <el-form-item :label="lang[lang.lang].ruName" prop="ruName">
+          <!-- <el-form-item :label="lang[lang.lang].ruName" prop="ruName">
             <el-input v-model="form.ruName" disabled></el-input>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item :label="lang[lang.lang].receiveMode" prop="receiveMode">
             <el-radio-group v-model="form.receiveMode" @change="receiveModeChange">
               <el-radio label="1">{{lang[lang.lang].receiveModes1}}</el-radio>
@@ -96,11 +99,12 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item :label="lang[lang.lang].suid" prop="suid" v-if="form.receiveMode==1">
-            <el-input v-model="form.suid" @input="suidChange" :placeholder="lang[lang.lang].editsuid" :disabled="form.receiveMode==0?true:false"></el-input><b style="border:1px solid #ccc;font-size:12px;padding:1px 5px;background:#f1f1f1;color:#606266;cursor:pointer;position: relative;right: 36px;" @click="place()">{{lang[lang.lang].en7}}</b>
+            <el-autocomplete v-model="form.suid" :fetch-suggestions="querySearch" :trigger-on-focus="false" :placeholder="lang[lang.lang].editsuid" @select="suidChange"></el-autocomplete><b style="border:1px solid #ccc;font-size:12px;padding:1px 5px;background:#f1f1f1;color:#606266;cursor:pointer;position: relative;right: 36px;" @click="place()">{{lang[lang.lang].en7}}</b>
+            <!-- <el-input v-model="form.suid" @input="suidChange" :placeholder="lang[lang.lang].editsuid" :disabled="form.receiveMode==0?true:false"></el-input> -->
           </el-form-item>
-          <el-form-item :label="lang[lang.lang].suName" prop="suName" v-if="form.receiveMode==1">
+          <!-- <el-form-item :label="lang[lang.lang].suName" prop="suName" v-if="form.receiveMode==1">
             <el-input v-model="form.suName" disabled></el-input>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item :label="lang[lang.lang].track" prop="track">
             <el-radio-group v-model="form.track">
               <el-radio label="0">A</el-radio>
@@ -236,6 +240,8 @@
         nationality1:false,
         nationality2:false,
         suidArr:[],
+        hasEmail:false,
+        hasCode:false,
         form: {
 
           nationality1:"0",
@@ -246,17 +252,20 @@
           compellation: "",
           EnglishName: "",
           email: "",
+          code: "",
           phone: "",
           mobile: "",
           identification: "",
           password: "",
           password2: "",
 
-          ruid: userInfo.deaultPhone||userInfo.phone,
+          // ruid: userInfo.deaultPhone||userInfo.phone,
+          ruid: "",
           ruid1: '',
           ruName: userInfo.deaultReferee,
           receiveMode: '1',
-          suid: userInfo.deaultPhone||userInfo.phone,
+          // suid: userInfo.deaultPhone||userInfo.phone,
+          suid: "",
           suid1: '',
           suName: userInfo.deaultReferee,
           track: userInfo.deaultTrack?userInfo.deaultTrack.toString():"0"
@@ -284,10 +293,17 @@
           compellation: [{required: true, message: langJson[lang].editcompellation, trigger: 'blur'}],
           EnglishName: [{required: true, message: langJson[lang].editEnglishName, trigger: 'blur'}],
           email: [{required: true, message: langJson[lang].editemail, trigger: 'blur'}, {
-            type: 'email',
-            message: langJson[lang].editemail1,
-            trigger: ['blur', 'change']
+            validator:(rule, value, callback, source, options)=>{
+              var errors=[];
+              if(!new RegExp("^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$").test(this.form.email)){
+                errors.push(new Error(langJson[lang].editemail1));
+                this.hasEmail=false;
+              } else
+                this.hasEmail=true;
+              callback(errors);
+            }
           }],
+          code: [{required: true, message: lang=='cn'?'請輸入驗證碼':'please enter verification code', trigger: 'blur'}],
           phone: [{required: true, message: langJson[lang].editphone, trigger: 'blur'}, {
             validator: (rule, value, callback, source, options)=> {
               var errors = [];
@@ -326,31 +342,31 @@
 
           ruid: [
             {required: true, message: langJson[lang].editruid, trigger: 'change'},
-            {
-              validator:  (rule, value, callback, source, options) =>{
-                var errors = [];
-                setTimeout(_=>{
-                  if (!/^\d{8}$/.test(this.form.ruid)) errors.push(new Error(langJson[lang].editphone1));
-                  if (!this.form.ruid1) errors.push(new Error(this.lang[this.lang.lang].en17));
-                  callback(errors);
-                },500);
-              }
-            }
+            // {
+            //   validator:  (rule, value, callback, source, options) =>{
+            //     var errors = [];
+            //     setTimeout(_=>{
+            //       if (!/^\d{8}$/.test(this.form.ruid)) errors.push(new Error(langJson[lang].editphone1));
+            //       if (!this.form.ruid1) errors.push(new Error(this.lang[this.lang.lang].en17));
+            //       callback(errors);
+            //     },500);
+            //   }
+            // }
           ],
           // ruName: [{required: true}],
           // receiveMode: [{required: true}],
           suid: [
             {required: true, message: langJson[lang].editsuid, trigger: 'change'},
-            {
-              validator:  (rule, value, callback, source, options) =>{
-                var errors = [];
-                setTimeout(_=>{
-                  if (!/^\d{8}$/.test(this.form.suid)) errors.push(new Error(langJson[lang].editphone1));
-                  if (!this.form.suid1) errors.push(new Error(this.lang[this.lang.lang].en17));
-                  callback(errors);
-                },500);
-              }
-            }
+            // {
+            //   validator:  (rule, value, callback, source, options) =>{
+            //     var errors = [];
+            //     setTimeout(_=>{
+            //       if (!/^\d{8}$/.test(this.form.suid)) errors.push(new Error(langJson[lang].editphone1));
+            //       if (!this.form.suid1) errors.push(new Error(this.lang[this.lang.lang].en17));
+            //       callback(errors);
+            //     },500);
+            //   }
+            // }
           ],
           // suName: [{required: true}],
           track: [{required: true, message: langJson[lang].track}]
@@ -378,34 +394,52 @@
           }
         });
       },
-      ruidChange: function () {
-        var t = this;
-        this.form.ruName = "";
-        if (this.form.ruid.length == 8) {
-          this.api(this, '/user/obtain', {
-            phone: this.form.ruid
-          }, res => {
-            t.form.ruName = res.compellation;
-            t.form.ruid1 = res.uid;
+      querySearch(queryString, cb) {
+        this.api(this, '/user/obtain', {
+          compellation: this.form.ruid
+        }, res => {
+          let item = [];
+          res.forEach(v=>{
+            item.push({value:v.compellation+"，"+v.mobile,uid:v.uid});
           });
-        }else{
-          t.form.ruid1 = "";
-        }
+          console.log(res,item);
+          cb(item);
+          // t.form.ruName = res.compellation;
+          // t.form.ruid1 = res.uid;
+        });
       },
-      suidChange: function () {
-        var t = this;
-        this.form.suName = "";
-        if (this.form.suid.length == 8) {
-          this.api(this, '/user/obtain', {
-            phone: this.form.suid
-          }, res => {
-            // console.log(this.form.suid,res.compellation,res.uid);
-            t.form.suName = res.compellation;
-            t.form.suid1 = res.uid;
-          });
-        }else{
-          t.form.suid1 = "";
-        }
+      ruidChange: function (item) {
+        this.form.ruid1 = item.uid;
+          // t.form.ruName = res.compellation;
+        // var t = this;
+        // this.form.ruName = "";
+        // // if (this.form.ruid.length == 8) {
+        // if (this.form.ruid.length) {
+        //   this.api(this, '/user/obtain', {
+        //     compellation: this.form.ruid
+        //   }, res => {
+        //     t.form.ruName = res.compellation;
+        //     t.form.ruid1 = res.uid;
+        //   });
+        // }else{
+        //   t.form.ruid1 = "";
+        // }
+      },
+      suidChange: function (item) {
+        this.form.suid1 = item.uid;
+        // var t = this;
+        // this.form.suName = "";
+        // if (this.form.suid.length) {
+        //   this.api(this, '/user/obtain', {
+        //     compellation: this.form.suid
+        //   }, res => {
+        //     // console.log(this.form.suid,res.compellation,res.uid);
+        //     t.form.suName = res.compellation;
+        //     t.form.suid1 = res.uid;
+        //   });
+        // }else{
+        //   t.form.suid1 = "";
+        // }
       },
       receiveModeChange: function () {
         if (this.form.ruid) {
@@ -414,31 +448,33 @@
           } else {
             this.form.suid = "";
           }
-          this.suidChange();
+          // this.suidChange();
         } else {
           this.form.receiveMode = "1";
         }
       },
       winupClose(isOk){
         let t = this;
+        let json = {
+          type:1,
+          // country: t.form.country*1,
+          // nationality: t.form.nationality*1,
+          compellation: t.form.compellation,
+          EnglishName: t.form.EnglishName,
+          email: t.form.email,
+          phone: t.form.phone,
+          mobile: t.form.mobile,
+          ruid: t.form.ruid1,
+          suid: t.form.suid1,
+          track: t.form.track*1,
+          mode: t.form.receiveMode==1?0:1,
+          password: t.form.password,
+          identification: t.form.identification
+        };
         this.winup.isShow = false;
         if(isOk==1){
-          this.api(this, "/user/register", {
-            type:1,
-            // country: t.form.country*1,
-            // nationality: t.form.nationality*1,
-            compellation: t.form.compellation,
-            EnglishName: t.form.EnglishName,
-            email: t.form.email,
-            phone: t.form.phone,
-            mobile: t.form.mobile,
-            ruid: t.form.ruid1,
-            suid: t.form.suid1,
-            track: t.form.track*1,
-            mode: t.form.receiveMode==1?0:1,
-            password: t.form.password,
-            identification: t.form.identification
-          }, res => {
+          if(this.hasCode)json.code=t.form.code;
+          this.api(this, "/user/register", json, res => {
             this.$message.success(t.lang[t.lang.lang].submitTxt);
             // t.$refs.form.resetFields();
             this.winup1IsShow = true;
@@ -475,8 +511,8 @@
         const dataArr = this.winup2.data;
         const i = Math.ceil(index/2)-1;
         const track = (index+1)%2;
-        this.form.suid = dataArr[i].phone;
-        this.suidChange();
+        this.form.suid = dataArr[i].compellation;
+        // this.suidChange();
         this.form.track = track.toString();
         this.winup2.isShow=false;
         this.suidArr=[];
@@ -501,11 +537,37 @@
       },
       nationalityChange2(){
         this.nationality2=true;
+      },
+      getCode(){
+        let emailDom = this.$refs.email;
+        let text = emailDom.innerText;
+        let num = 180;
+        let timer=null;
+        let error =_=>{
+          clearInterval(timer);
+          emailDom.innerText = text;
+          emailDom.style.right = "72px";
+        };
+        let run = _=>{
+          num--;
+          emailDom.innerText = num;
+          if(!num)error();
+        };
+        if(!isNaN(text))return;
+        this.hasCode=true;
+        timer = setInterval(run,1000);
+        run();
+        emailDom.style.right = "36px";
+        this.api(this, "/user/email", {email:this.form.email}, res => {
+          
+        },res=>{
+          if(res=='failure')this.$message.error("發送郵箱失敗，請檢查郵箱號是否正確");
+        });
       }
     },
     mounted(){
-      this.ruidChange();
-      this.suidChange();
+      // this.ruidChange();
+      // this.suidChange();
     },
     created(){
       this.$root.$on("selectLang",res=>{

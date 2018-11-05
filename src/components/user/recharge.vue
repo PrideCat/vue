@@ -95,9 +95,9 @@
       langJson.lang = lang;
       let searchDate = new Date();
       searchDate.setDate(1);
-      let searchEndDate = searchDate.getFullYear()+"-"+getNumber(searchDate.getMonth()+1)+"-"+getNumber(searchDate.getDate());
-      searchDate.setDate(searchDate.getDate()-30);
-      let searchStartDate = searchDate.getFullYear()+"-"+getNumber(searchDate.getMonth()+1)+"-"+getNumber(searchDate.getDate());
+      let searchEndDate = searchDate.getFullYear()+"-"+getNumber(searchDate.getMonth()+2)+"-01";
+      // searchDate.setDate(searchDate.getDate()-30);
+      let searchStartDate = searchDate.getFullYear()+"-"+getNumber(searchDate.getMonth()+1)+"-01";
       return {
         collapseAttr,
         lang: langJson,

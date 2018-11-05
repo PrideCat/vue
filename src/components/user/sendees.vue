@@ -40,7 +40,7 @@
     let year = str[0],week = str[1],date = new Date(),start,end;
     date.setMonth(0,1);
     date.setDate(date.getDate()-date.getDay());
-    date.setDate(date.getDate()+week*7-1);
+    date.setDate(date.getDate()+week*7);
     start = date.toLocaleDateString();
     date.setDate(date.getDate()+6);
     end = date.toLocaleDateString();
@@ -94,10 +94,10 @@
           {title:langJson[lang].Membership,partA: "", partB: ""},
           {title:langJson[lang].accumulation + "（BV）",partA: "", partB: ""},
           {title:langJson[lang].Balance + "（BV）",partA: "", partB: ""},
-          {title:langJson[lang].Week + "4（" + weeks[3] + "）",partA: "", partB: ""},
-          {title:langJson[lang].Week + "3（" + weeks[2] + "）",partA: "", partB: ""},
-          {title:langJson[lang].Week + "2（" + weeks[1] + "）",partA: "", partB: ""},
-          {title:langJson[lang].Week + "1（" + weeks[0] + "）",partA: "", partB: ""},
+          {title: weeks[3] ,partA: "", partB: ""},
+          {title: weeks[2] ,partA: "", partB: ""},
+          {title: weeks[1] ,partA: "", partB: ""},
+          {title: weeks[0] ,partA: "", partB: ""},
           {title:langJson[lang].ThisWeek + "（BV）",partA: "", partB: ""},
           // {title:langJson[lang].Unsettlement + "（BV）",partA: "", partB: ""}
         ],
@@ -135,16 +135,22 @@
           t.tableData[5].partB = 0;
           t.tableData[6].partB = 0;
           t.tableData[7].partB = 0;
-          if(res.weekIntegralA.length>0){
+          if(res.weekIntegralA.length>0||res.weekIntegralB.length>0){
             res.weekIntegralA.forEach((v,i)=>{
               t.tableData[i+3].partA = v.integral;
-              t.tableData[i+3].title = this.lang[this.lang.lang].Week + Math.abs(i-4) + "（" + returnWeek(v.week) + "）";
+              t.tableData[i+3].title = returnWeek(v.week);
             });
             res.weekIntegralB.forEach((v,i)=>{
               t.tableData[i+3].partB = v.integral;
-              t.tableData[i+3].title = this.lang[this.lang.lang].Week + Math.abs(i-4) + "（" + returnWeek(v.week) + "）";
+              t.tableData[i+3].title = returnWeek(v.week);
             });
           }
+          for(let i=3;i<=6;i++){
+            if(!t.tableData[i].partA&&!t.tableData[i].partB){
+              t.tableData.splice(i,1);
+            }
+          }
+          t.tableData[t.tableData.length-1].title = t.lang[t.lang.lang].ThisWeek + "（BV）";
           this.treeData = [,,,,,,,];
           this.treeData[0] = res.data;
           res.downline.forEach(v=>{
@@ -180,10 +186,10 @@
         this.tableData[0].title=this.lang[res].Membership;
         this.tableData[1].title=this.lang[res].accumulation + "（BV）";
         this.tableData[2].title=this.lang[res].Balance + "（BV）";
-        this.tableData[3].title=this.lang[res].Week + "4（" + weeks[3] + "）";
-        this.tableData[4].title=this.lang[res].Week + "3（" + weeks[2] + "）";
-        this.tableData[5].title=this.lang[res].Week + "2（" + weeks[1] + "）";
-        this.tableData[6].title=this.lang[res].Week + "1（" + weeks[0] + "）";
+        this.tableData[3].title= weeks[3];
+        this.tableData[4].title= weeks[2];
+        this.tableData[5].title= weeks[1];
+        this.tableData[6].title= weeks[0];
         this.tableData[7].title=this.lang[res].ThisWeek + "（BV）";
         this.tableData[8].title=this.lang[res].Unsettlement + "（BV）";
         this.search();

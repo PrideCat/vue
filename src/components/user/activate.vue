@@ -6,7 +6,7 @@
       <div class="fromBox">
         <p class="tab">
           <a :class="form.property==0?'active':''" href="javascript:void(0);" @click="form.property=0">{{lang[lang.lang].en2}}</a>
-          <!-- <a :class="form.property==1?'active':''" href="javascript:void(0);"  @click="form.property=1">{{lang[lang.lang].en3}}</a> -->
+          <a :class="form.property==1?'active':''" href="javascript:void(0);"  @click="form.property=1">{{lang[lang.lang].en3}}</a>
         </p>
         <div :style="collapseAttr.formBoxStyle">
           <!-- <el-form-item :label="lang[lang.lang].country" prop="country">{{nationalitysWin[0][lang.lang]}}</el-form-item>
@@ -14,6 +14,9 @@
           <div v-if="form.property==1">
             <el-form-item :label="lang[lang.lang].company" prop="company">
               <el-input v-model="form.company" :placeholder="lang[lang.lang].editcompany"></el-input>
+            </el-form-item>
+            <el-form-item :label="lang[lang.lang].EnglishCompany" prop="EnglishCompany">
+              <el-input v-model="form.EnglishCompany" :placeholder="lang[lang.lang].editEnglishCompany"></el-input>
             </el-form-item>
             <el-form-item :label="lang[lang.lang].legalPerson" prop="legalPerson">
               <el-input v-model="form.legalPerson" :placeholder="lang[lang.lang].editlegalPerson"></el-input>
@@ -53,7 +56,7 @@
             </el-upload>
           </el-form-item>
           <el-form-item :label="lang[lang.lang].nickname">
-            <el-input v-model="form.nickname"></el-input>
+            <el-input v-model="form.nickname" disabled="disabled"></el-input>
           </el-form-item>
           <el-form-item :label="lang[lang.lang].birthday">
             <el-date-picker v-model="form.birthday" type="date"
@@ -70,7 +73,10 @@
             <el-input v-model="form.wechatNumber" :placeholder="lang[lang.lang].editwechatNumber"></el-input>
           </el-form-item>
           <el-form-item :label="lang[lang.lang].email" prop="email">
-            <el-input v-model="form.email" :placeholder="lang[lang.lang].editemail"></el-input>
+            <el-input v-model="form.email" :placeholder="lang[lang.lang].editemail"></el-input><b v-if="hasEmail" style="border:1px solid #ccc;font-size:12px;padding:1px 5px;background:#f1f1f1;color:#606266;cursor:pointer;position: relative;right: 72px;" @click="getCode" ref="email">{{lang.lang=='cn'?"獲取驗證碼":'get verification code'}}</b>
+          </el-form-item>
+          <el-form-item :label="lang.lang=='cn'?'驗證碼':'Verification Code'" prop="code" v-if="hasCode">
+            <el-input v-model="form.code" :placeholder="lang.lang=='cn'?'請輸入驗證碼':'please enter verification code'"></el-input>
           </el-form-item>
           <!-- <el-form-item :label="'訂閱廣告郵箱'" prop="email">
             <el-radio-group v-model="form.property">
@@ -187,9 +193,12 @@
         nationality2:false,
         nationality11:"1",
         nationality22:"1",
+        hasEmail:false,
+        hasCode:false,
         form:{
           property:0,
           company: userInfo.company,
+          EnglishCompany: userInfo.EnglishCompany,
           legalPerson: userInfo.legalPerson,
           businessLicense: userInfo.businessLicense,
           compellation:userInfo.compellation,
@@ -203,6 +212,7 @@
           phone:userInfo.phone,
           mobile:"",
           email:userInfo.email,
+          code:"",
           seat:userInfo.seat,
           address:userInfo.address,
           postal:userInfo.postal,
@@ -214,6 +224,9 @@
         rules:{
           company: [
             {required:true,message:langJson[lang].editcompany,trigger:"change"}
+          ],
+          EnglishCompany: [
+            {required:true,message:langJson[lang].editEnglishCompany,trigger:"change"}
           ],
           legalPerson: [
             {required:true,message:langJson[lang].editlegalPerson,trigger:"change"}
@@ -271,11 +284,18 @@
           ],
           email:[
             {required:true,message:langJson[lang].editemail,trigger:"change"},{
-              type: 'email',
-              message: langJson[lang].editemail1,
-              trigger: ['blur', 'change']
+              validator:(rule, value, callback, source, options)=>{
+                var errors=[];
+                if(!new RegExp("^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$").test(this.form.email)){
+                  errors.push(new Error(langJson[lang].editemail1));
+                  this.hasEmail=false;
+                } else
+                  this.hasEmail=true;
+                callback(errors);
+              }
             }
           ],
+          code: [{required: true, message: lang=='cn'?'請輸入驗證碼':'please enter verification code', trigger: 'blur'}],
           property:[
             {required:true,message:langJson[lang].editproperty,trigger:"change"}
           ],
@@ -323,6 +343,7 @@
         this.$refs.form.validate(valid => {
           if (valid) {
             let formData = new FormData();
+            if(!this.form.code||!this.hasCode)delete this.form.code;
             for(let k in this.form){
               formData.append(k, this.form[k]);
             }
@@ -332,7 +353,7 @@
               (document.documentElement||document.body).scrollTop=0;
               this.userInfo.activate = 1;
               this.global.updateUserInfo(this.userInfo);
-              // this.$router.push('index');
+              this.$router.push('index');
             },'','',1);
           } else {
             this.$message.error(this.lang[this.lang.lang].en7);
@@ -364,6 +385,32 @@
       },
       nationalityChange2(){
         this.nationality2=true;
+      },
+      getCode(){
+        let emailDom = this.$refs.email;
+        let text = emailDom.innerText;
+        let num = 180;
+        let timer=null;
+        let error =_=>{
+          clearInterval(timer);
+          emailDom.innerText = text;
+          emailDom.style.right = "72px";
+        };
+        let run = _=>{
+          num--;
+          emailDom.innerText = num;
+          if(!num)error();
+        };
+        if(!isNaN(text))return;
+        this.hasCode=true;
+        timer = setInterval(run,1000);
+        run();
+        emailDom.style.right = "36px";
+        this.api(this, "/user/email", {email:this.form.email}, res => {
+          
+        },res=>{
+          if(res=='failure')this.$message.error("發送郵箱失敗，請檢查郵箱號是否正確");
+        });
       }
     },
     mounted(){
@@ -376,6 +423,19 @@
         this.lang.lang = res;
         // console.log(res);
       })
+      const theFn = _=>{
+        this.api(this, '/user/msg', "", res => {
+          this.userInfo = res;
+          sessionStorage.userInfoStorage = JSON.stringify(res);
+          this.global.userInfo = res;
+          if(res.activate==2){
+            clearInterval(settimeout);
+            // this.$router.push('/user/index');
+          }
+        });
+      };
+      let settimeout = setInterval(theFn,5000);
+      theFn();
     }
   }
 </script>
@@ -384,5 +444,4 @@
   .tab{padding: 10px;margin-bottom: 40px;}
   .tab a{font-size: 16px;color: #666;text-decoration: initial;margin-right: 35px;padding-bottom: 8px;}
   .tab a.active{color: #978168;border-bottom: 2px solid #978168;}
-  
 </style>

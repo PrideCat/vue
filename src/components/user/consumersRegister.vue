@@ -50,12 +50,13 @@
         <p class="form-title"><span>{{lang[lang.lang].edituserinfo}}</span></p>
         <div :style="collapseAttr.formBoxStyle">
           <el-form-item :label="lang[lang.lang].ruid" prop="ruid">
-            <el-input v-model="form.ruid" @input="ruidChange"
-                      :placeholder="lang[lang.lang].editruid"></el-input>
+            <!-- <el-input v-model="form.ruid" @input="ruidChange"
+                      :placeholder="lang[lang.lang].editruid"></el-input> -->
+            <el-autocomplete v-model="form.ruid" :fetch-suggestions="querySearch" :trigger-on-focus="false" :placeholder="lang[lang.lang].editruid" @select="ruidChange"></el-autocomplete>
           </el-form-item>
-          <el-form-item :label="lang[lang.lang].ruName" prop="ruName">
+          <!-- <el-form-item :label="lang[lang.lang].ruName" prop="ruName">
             <el-input v-model="form.ruName" disabled></el-input>
-          </el-form-item>
+          </el-form-item> -->
           <!-- <el-form-item :label="lang[lang.lang].country" prop="country">
             <el-select v-model="form.country" :placeholder="lang[lang.lang].editcountry">
               <el-option v-for="item in nationalitysWin" :label="item[lang.lang]"
@@ -85,7 +86,10 @@
                       :placeholder="lang[lang.lang].editEnglishName"></el-input>
           </el-form-item>
           <el-form-item :label="lang[lang.lang].email" prop="email">
-            <el-input v-model="form.email" :placeholder="lang[lang.lang].editemail"></el-input>
+            <el-input v-model="form.email" :placeholder="lang[lang.lang].editemail"></el-input><b v-if="hasEmail" style="border:1px solid #ccc;font-size:12px;padding:1px 5px;background:#f1f1f1;color:#606266;cursor:pointer;position: relative;right: 72px;" @click="getCode" ref="email">{{lang.lang=='cn'?"獲取驗證碼":'get verification code'}}</b>
+          </el-form-item>
+          <el-form-item :label="lang.lang=='cn'?'驗證碼':'Verification Code'" prop="code" v-if="hasCode">
+            <el-input v-model="form.code" :placeholder="lang.lang=='cn'?'請輸入驗證碼':'please enter verification code'"></el-input>
           </el-form-item>
           <el-form-item :label="lang[lang.lang].phone" prop="phone">
             <!-- <el-select v-model="form.nationality2" :placeholder="lang[lang.lang].editnationality" style="width: 100px" @change="nationalityChange2">
@@ -238,6 +242,8 @@
         nationalitys,
         nationality1:false,
         nationality2:false,
+        hasEmail:false,
+        hasCode:false,
         form: {
 
           // country: "0",
@@ -262,6 +268,7 @@
           nationality: "0",
           compellation: "",
           email: "",
+          code: "",
           phone:"",
           mobile: "",
           identification: "",
@@ -270,7 +277,8 @@
           paymentPassword:"",
           paymentPassword1:"",
 
-          ruid: userInfo.deaultPhone||userInfo.phone,
+          // ruid: userInfo.deaultPhone||userInfo.phone,
+          ruid: "",
           ruid1: '',
           ruName: userInfo.deaultReferee,
           receiveMode: '1',
@@ -304,10 +312,17 @@
           compellation: [{required: true, message: langJson[lang].editcompellation, trigger: 'blur'}],
           EnglishName: [{required: true, message: langJson[lang].editEnglishName, trigger: 'blur'}],
           email: [{required: true, message: langJson[lang].editemail, trigger: 'blur'}, {
-            type: 'email',
-            message: langJson[lang].editemail1,
-            trigger: ['blur', 'change']
+            validator:(rule, value, callback, source, options)=>{
+              var errors=[];
+              if(!new RegExp("^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$").test(this.form.email)){
+                errors.push(new Error(langJson[lang].editemail1));
+                this.hasEmail=false;
+              } else
+                this.hasEmail=true;
+              callback(errors);
+            }
           }],
+          code: [{required: true, message: lang=='cn'?'請輸入驗證碼':'please enter verification code', trigger: 'blur'}],
           mobile: [{required: true, message: langJson[lang].editmobile, trigger: 'blur'}, {
             validator: (rule, value, callback, source, options)=> {
               var errors = [];
@@ -357,16 +372,16 @@
           ],
           ruid: [
             { message: langJson[lang].editruid, trigger: 'change'},
-            {
-              validator:  (rule, value, callback, source, options) =>{
-                var errors = [];
-                setTimeout(_=>{
-                  if (!/^\d{8}$/.test(this.form.ruid)) errors.push(new Error(langJson[lang].editphone1));
-                  if (!this.form.ruid1) errors.push(new Error(this.lang[this.lang.lang].en6));
-                  callback(errors);
-                },500);
-              }
-            }
+            // {
+            //   validator:  (rule, value, callback, source, options) =>{
+            //     var errors = [];
+            //     setTimeout(_=>{
+            //       if (!/^\d{8}$/.test(this.form.ruid)) errors.push(new Error(langJson[lang].editphone1));
+            //       if (!this.form.ruid1) errors.push(new Error(this.lang[this.lang.lang].en6));
+            //       callback(errors);
+            //     },500);
+            //   }
+            // }
           ],
           // ruName: [{required: true}],
           // receiveMode: [{required: true}],
@@ -394,20 +409,35 @@
           }
         });
       },
-      ruidChange: function () {
-        var t = this;
-        this.form.ruName = "";
-        if (this.form.ruid.length == 8) {
-          t.form.ruid1 = "";
-          this.api(this, '/user/obtain', {
-            phone: this.form.ruid
-          }, res => {
-            t.form.ruName = res.compellation;
-            t.form.ruid1 = res.uid;
+      querySearch(queryString, cb) {
+        this.api(this, '/user/obtain', {
+          compellation: this.form.ruid
+        }, res => {
+          let item = [];
+          res.forEach(v=>{
+            item.push({value:v.compellation+"，"+v.mobile,uid:v.uid});
           });
-        }else{
-          t.form.ruid1 = "";
-        }
+          console.log(res,item);
+          cb(item);
+          // t.form.ruName = res.compellation;
+          // t.form.ruid1 = res.uid;
+        });
+      },
+      ruidChange: function (item) {
+        this.form.ruid1 = item.uid;
+        // var t = this;
+        // this.form.ruName = "";
+        // if (this.form.ruid.length == 8) {
+        //   t.form.ruid1 = "";
+        //   this.api(this, '/user/obtain', {
+        //     phone: this.form.ruid
+        //   }, res => {
+        //     t.form.ruName = res.compellation;
+        //     t.form.ruid1 = res.uid;
+        //   });
+        // }else{
+        //   t.form.ruid1 = "";
+        // }
       },
       suidChange: function () {
         var t = this;
@@ -446,24 +476,26 @@
       },
       winupClose(isOk){
         let t = this;
+        let json ={
+          type:0,
+          // country: t.form.country*1,
+          // nationality: t.form.nationality*1,
+          identification: t.form.identification,
+          compellation: t.form.compellation,
+          EnglishName: t.form.EnglishName,
+          email: t.form.email,
+          phone: t.form.phone,
+          mobile: t.form.mobile,
+          ruid: t.form.ruid1,
+          suid: t.form.suid1,
+          track: t.form.track*1,
+          password: t.form.password,
+          paymentPassword: t.form.paymentPassword
+        };
         this.winup.isShow = false;
         if(isOk==1){
-          this.api(this, "/user/register", {
-            type:0,
-            // country: t.form.country*1,
-            // nationality: t.form.nationality*1,
-            identification: t.form.identification,
-            compellation: t.form.compellation,
-            EnglishName: t.form.EnglishName,
-            email: t.form.email,
-            phone: t.form.phone,
-            mobile: t.form.mobile,
-            ruid: t.form.ruid1,
-            suid: t.form.suid1,
-            track: t.form.track*1,
-            password: t.form.password,
-            paymentPassword: t.form.paymentPassword
-          }, res => {
+          if(this.hasCode)json.code=t.form.code;
+          this.api(this, "/user/register", json, res => {
             console.log(res);
             this.theCoverData = res;
             this.$message.success(t.lang[t.lang.lang].submitTxt);
@@ -472,9 +504,35 @@
           });
         }
       },
+      getCode(){
+        let emailDom = this.$refs.email;
+        let text = emailDom.innerText;
+        let num = 180;
+        let timer=null;
+        let error =_=>{
+          clearInterval(timer);
+          emailDom.innerText = text;
+          emailDom.style.right = "72px";
+        };
+        let run = _=>{
+          num--;
+          emailDom.innerText = num;
+          if(!num)error();
+        };
+        if(!isNaN(text))return;
+        this.hasCode=true;
+        timer = setInterval(run,1000);
+        run();
+        emailDom.style.right = "36px";
+        this.api(this, "/user/email", {email:this.form.email}, res => {
+          
+        },res=>{
+          if(res=='failure')this.$message.error("發送郵箱失敗，請檢查郵箱號是否正確");
+        });
+      }
     },
     mounted(){
-      this.ruidChange();
+      // this.ruidChange();
     },
     created(){
       this.$root.$on("selectLang",res=>{
