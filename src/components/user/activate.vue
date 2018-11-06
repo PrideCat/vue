@@ -5,8 +5,8 @@
     <el-form ref="form" :model="form" :rules="rules" label-width="120px" label-position="right">
       <div class="fromBox">
         <p class="tab">
-          <a :class="form.property==0?'active':''" href="javascript:void(0);" @click="form.property=0">{{lang[lang.lang].en2}}</a>
-          <a :class="form.property==1?'active':''" href="javascript:void(0);"  @click="form.property=1">{{lang[lang.lang].en3}}</a>
+          <a :class="form.property==0?'active':''" href="javascript:void(0);" @click="hasActivate?'':form.property=0">{{lang[lang.lang].en2}}</a>
+          <a :class="form.property==1?'active':''" href="javascript:void(0);"  @click="hasActivate?'':form.property=1">{{lang[lang.lang].en3}}</a>
         </p>
         <div :style="collapseAttr.formBoxStyle">
           <!-- <el-form-item :label="lang[lang.lang].country" prop="country">{{nationalitysWin[0][lang.lang]}}</el-form-item>
@@ -18,9 +18,9 @@
             <el-form-item :label="lang[lang.lang].EnglishCompany" prop="EnglishCompany">
               <el-input v-model="form.EnglishCompany" :placeholder="lang[lang.lang].editEnglishCompany"></el-input>
             </el-form-item>
-            <el-form-item :label="lang[lang.lang].legalPerson" prop="legalPerson">
+            <!-- <el-form-item :label="lang[lang.lang].legalPerson" prop="legalPerson">
               <el-input v-model="form.legalPerson" :placeholder="lang[lang.lang].editlegalPerson"></el-input>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item :label="lang[lang.lang].businessLicense" prop="businessLicense">
               <el-input v-model="form.businessLicense" :placeholder="lang[lang.lang].editbusinessLicense"></el-input>
             </el-form-item>
@@ -195,8 +195,9 @@
         nationality22:"1",
         hasEmail:false,
         hasCode:false,
+        hasActivate:false,
         form:{
-          property:0,
+          property:userInfo.property||0,
           company: userInfo.company,
           EnglishCompany: userInfo.EnglishCompany,
           legalPerson: userInfo.legalPerson,
@@ -426,16 +427,18 @@
       const theFn = _=>{
         this.api(this, '/user/msg', "", res => {
           this.userInfo = res;
+          this.$parent.$parent.$parent.$parent.userInfo = res;
           sessionStorage.userInfoStorage = JSON.stringify(res);
           this.global.userInfo = res;
           if(res.activate==2){
             clearInterval(settimeout);
-            // this.$router.push('/user/index');
+            this.$router.push('/user/index');
           }
         });
       };
       let settimeout = setInterval(theFn,5000);
       theFn();
+      if(this.userInfo.property==1)this.hasActivate=true;
     }
   }
 </script>

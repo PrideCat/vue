@@ -94,11 +94,11 @@
           {title:langJson[lang].Membership,partA: "", partB: ""},
           {title:langJson[lang].accumulation + "（BV）",partA: "", partB: ""},
           {title:langJson[lang].Balance + "（BV）",partA: "", partB: ""},
-          {title: weeks[3] ,partA: "", partB: ""},
-          {title: weeks[2] ,partA: "", partB: ""},
-          {title: weeks[1] ,partA: "", partB: ""},
-          {title: weeks[0] ,partA: "", partB: ""},
-          {title:langJson[lang].ThisWeek + "（BV）",partA: "", partB: ""},
+          // {title: weeks[3] ,partA: "", partB: ""},
+          // {title: weeks[2] ,partA: "", partB: ""},
+          // {title: weeks[1] ,partA: "", partB: ""},
+          // {title: weeks[0] ,partA: "", partB: ""},
+          // {title:langJson[lang].ThisWeek + "（BV）",partA: "", partB: ""},
           // {title:langJson[lang].Unsettlement + "（BV）",partA: "", partB: ""}
         ],
         treeData:[,,,,,,,],
@@ -125,32 +125,29 @@
           t.tableData[1].partB = res.data.integralB;
           t.tableData[2].partB = res.data.integralB - res.data.accumulation;
           // t.tableData[8].partB = res.data.unliquidatedB;
-          t.tableData[3].partA = 0;
-          t.tableData[4].partA = 0;
-          t.tableData[5].partA = 0;
-          t.tableData[6].partA = 0;
-          t.tableData[7].partA = 0;
-          t.tableData[3].partB = 0;
-          t.tableData[4].partB = 0;
-          t.tableData[5].partB = 0;
-          t.tableData[6].partB = 0;
-          t.tableData[7].partB = 0;
+        
+          let weekIntegral = [],weekIntegralItem;
           if(res.weekIntegralA.length>0||res.weekIntegralB.length>0){
             res.weekIntegralA.forEach((v,i)=>{
-              t.tableData[i+3].partA = v.integral;
-              t.tableData[i+3].title = returnWeek(v.week);
+              weekIntegral.push({title:v.week,partA:v.integral,partB:0});
             });
             res.weekIntegralB.forEach((v,i)=>{
-              t.tableData[i+3].partB = v.integral;
-              t.tableData[i+3].title = returnWeek(v.week);
+              weekIntegralItem = weekIntegral.filter(val=>val.title==v.week);
+              if(weekIntegralItem.length)
+                weekIntegralItem[0].partB = v.integral;
+              else
+                weekIntegral.push({title:v.week,partA:0,partB:v.integral});
             });
           }
-          for(let i=3;i<=6;i++){
-            if(!t.tableData[i].partA&&!t.tableData[i].partB){
-              t.tableData.splice(i,1);
-            }
-          }
-          t.tableData[t.tableData.length-1].title = t.lang[t.lang.lang].ThisWeek + "（BV）";
+          weekIntegral.sort((a,b)=>a.title.replace("_","")>b.title.replace("_",""));
+          weekIntegral.forEach(v=>{
+            t.tableData.push(v);
+            v.title = returnWeek(v.title);
+          });
+          
+          t.tableData.push({title:t.lang[t.lang.lang].ThisWeek + "（BV）",partA:res.data.unliquidatedA,partB:res.data.unliquidatedB});  
+
+
           this.treeData = [,,,,,,,];
           this.treeData[0] = res.data;
           res.downline.forEach(v=>{
@@ -186,12 +183,12 @@
         this.tableData[0].title=this.lang[res].Membership;
         this.tableData[1].title=this.lang[res].accumulation + "（BV）";
         this.tableData[2].title=this.lang[res].Balance + "（BV）";
-        this.tableData[3].title= weeks[3];
-        this.tableData[4].title= weeks[2];
-        this.tableData[5].title= weeks[1];
-        this.tableData[6].title= weeks[0];
-        this.tableData[7].title=this.lang[res].ThisWeek + "（BV）";
-        this.tableData[8].title=this.lang[res].Unsettlement + "（BV）";
+        // this.tableData[3].title= weeks[3];
+        // this.tableData[4].title= weeks[2];
+        // this.tableData[5].title= weeks[1];
+        // this.tableData[6].title= weeks[0];
+        // this.tableData[7].title=this.lang[res].ThisWeek + "（BV）";
+        // this.tableData[8].title=this.lang[res].Unsettlement + "（BV）";
         this.search();
       })
     }

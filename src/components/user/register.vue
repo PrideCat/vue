@@ -165,7 +165,7 @@
               <li v-for="(item,index) in winup2.data">
                 <div :class="item?'has':''">
                   <b @click="!item&&winup2.data[theLv(index)]?toPlace(index):(item?toPlace1(item):'')" :style="winup2.data[theLv(index)]?'':'cursor:default;'">
-                    <p>{{item?item.uid:""}}</p>
+                    <p>{{item?item.mobile:""}}</p>
                     <p>{{item?item.compellation:(winup2.data[theLv(index)]?lang[lang.lang].en15:lang[lang.lang].en16)}}</p>
                   </b>
                 </div>
@@ -511,7 +511,8 @@
         const dataArr = this.winup2.data;
         const i = Math.ceil(index/2)-1;
         const track = (index+1)%2;
-        this.form.suid = dataArr[i].compellation;
+        this.form.suid = dataArr[i].compellation+"，"+dataArr[i].mobile;
+        this.form.suid1 = dataArr[i].uid;
         // this.suidChange();
         this.form.track = track.toString();
         this.winup2.isShow=false;
