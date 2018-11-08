@@ -35,16 +35,19 @@
 </template>
 
 <script>
+  const today = new Date();
   const returnWeek = str =>{
     str?str = str.split("_"):"";
-    let year = str[0],week = str[1],date = new Date(),start,end;
+    let year = str[0],week = str[1],date = new Date(),start,end,startTime,endTime;
     date.setMonth(0,1);
     date.setDate(date.getDate()-date.getDay());
     date.setDate(date.getDate()+week*7);
     start = date.toLocaleDateString();
+    startTime = date.getTime();
     date.setDate(date.getDate()+6);
     end = date.toLocaleDateString();
-    return start+"~"+end;
+    endTime = date.getTime();
+    return {string:start+"~"+end,times:[startTime,endTime]};
   };
 
   const date = new Date();
@@ -126,7 +129,8 @@
           t.tableData[2].partB = res.data.integralB - res.data.accumulation;
           // t.tableData[8].partB = res.data.unliquidatedB;
         
-          let weekIntegral = [],weekIntegralItem;
+          let weekIntegral = [],weekIntegralItem,weekJson;
+          t.tableData.splice(3);
           if(res.weekIntegralA.length>0||res.weekIntegralB.length>0){
             res.weekIntegralA.forEach((v,i)=>{
               weekIntegral.push({title:v.week,partA:v.integral,partB:0});
@@ -141,11 +145,15 @@
           }
           weekIntegral.sort((a,b)=>a.title.replace("_","")>b.title.replace("_",""));
           weekIntegral.forEach(v=>{
+            weekJson = returnWeek(v.title);
             t.tableData.push(v);
-            v.title = returnWeek(v.title);
+            if(weekJson.times[0]<today.getTime()&&weekJson.times[1]>today.getTime())
+              v.title = t.lang[t.lang.lang].ThisWeek + "（BV）";
+            else
+              v.title = weekJson.string;
           });
           
-          t.tableData.push({title:t.lang[t.lang.lang].ThisWeek + "（BV）",partA:res.data.unliquidatedA,partB:res.data.unliquidatedB});  
+          // t.tableData.push({title:t.lang[t.lang.lang].ThisWeek + "（BV）",partA:res.data.unliquidatedA,partB:res.data.unliquidatedB});  
 
 
           this.treeData = [,,,,,,,];

@@ -420,10 +420,6 @@
       this.file = this.userInfo.identificationPic?[{name:this.lang[this.lang.lang].en4,url:this.userInfo.identificationPic}]:[]
     },
     created(){
-      this.$root.$on("selectLang",res=>{
-        this.lang.lang = res;
-        // console.log(res);
-      })
       const theFn = _=>{
         this.api(this, '/user/msg', "", res => {
           this.userInfo = res;
@@ -433,12 +429,20 @@
           if(res.activate==2){
             clearInterval(settimeout);
             this.$router.push('/user/index');
+          }else if(res.activate==1){
+            this.hasActivate=userInfo.property=='0'||userInfo.property=='1'?true:false;
           }
         });
       };
-      let settimeout = setInterval(theFn,5000);
-      theFn();
-      if(this.userInfo.property==1)this.hasActivate=true;
+      const userInfo = this.userInfo;
+      this.$root.$on("selectLang",res=>{
+        this.lang.lang = res;
+        // console.log(res);
+      })
+      if(userInfo.activate=='1'||userInfo.activate=="2"){
+        let settimeout = setInterval(theFn,5000);
+        theFn();
+      }
     }
   }
 </script>

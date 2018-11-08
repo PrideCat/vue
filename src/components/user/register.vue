@@ -396,7 +396,7 @@
       },
       querySearch(queryString, cb) {
         this.api(this, '/user/obtain', {
-          compellation: this.form.ruid
+          compellation: queryString
         }, res => {
           let item = [];
           res.forEach(v=>{
