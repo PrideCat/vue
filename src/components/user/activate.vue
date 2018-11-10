@@ -420,6 +420,7 @@
       this.file = this.userInfo.identificationPic?[{name:this.lang[this.lang.lang].en4,url:this.userInfo.identificationPic}]:[]
     },
     created(){
+      let settimeout;
       const theFn = _=>{
         this.api(this, '/user/msg', "", res => {
           this.userInfo = res;
@@ -440,7 +441,7 @@
         // console.log(res);
       })
       if(userInfo.activate=='1'||userInfo.activate=="2"){
-        let settimeout = setInterval(theFn,5000);
+        settimeout = setInterval(theFn,5000);
         theFn();
       }
     }

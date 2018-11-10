@@ -129,7 +129,7 @@
           t.tableData[2].partB = res.data.integralB - res.data.accumulation;
           // t.tableData[8].partB = res.data.unliquidatedB;
         
-          let weekIntegral = [],weekIntegralItem,weekJson;
+          let weekIntegral = [],weekIntegralItem,weekJson,hasToWeek;
           t.tableData.splice(3);
           if(res.weekIntegralA.length>0||res.weekIntegralB.length>0){
             res.weekIntegralA.forEach((v,i)=>{
@@ -147,13 +147,14 @@
           weekIntegral.forEach(v=>{
             weekJson = returnWeek(v.title);
             t.tableData.push(v);
-            if(weekJson.times[0]<today.getTime()&&weekJson.times[1]>today.getTime())
+            if(weekJson.times[0]<today.getTime()&&weekJson.times[1]>today.getTime()){
               v.title = t.lang[t.lang.lang].ThisWeek + "（BV）";
-            else
+              hasToWeek = 1;
+            }else{
               v.title = weekJson.string;
+            }
           });
-          
-          // t.tableData.push({title:t.lang[t.lang.lang].ThisWeek + "（BV）",partA:res.data.unliquidatedA,partB:res.data.unliquidatedB});  
+          if(!hasToWeek)t.tableData.push({title:t.lang[t.lang.lang].ThisWeek + "（BV）",partA:0,partB:0});  
 
 
           this.treeData = [,,,,,,,];
