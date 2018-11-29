@@ -2,7 +2,7 @@
   <div>
     <div v-title :data-title="lang[lang.lang].en144"></div>
     <div class="fromBox">
-      <p class="form-title searchBox">
+      <p class="form-title searchBox" style="border-bottom: 0;margin-bottom: 5px;">
         <b>
           <span>{{lang[lang.lang].en6}}：</span>
           <el-input v-model="search.orderNumber" @input="init"></el-input>
@@ -28,9 +28,20 @@
           <el-date-picker style="width: 135px;" v-model="search.endDate" type="date" @change="init"></el-date-picker>
         </b>
       </p>
+      <p class="form-title searchBox">
+         <b>
+          <span>{{lang.lang=='cn'?"聯繫號碼":"Contact Number"}}：</span>
+          <el-input v-model="search.mobile" @input="init"></el-input>
+          &nbsp;&nbsp;&nbsp;
+          <span>{{lang.lang=='cn'?"聯繫人":"Contact"}}：</span>
+          <el-input v-model="search.contact" @input="init"></el-input>
+        </b>
+      </P>
       <el-table :class="lang.lang=='en'?'langIsEn':''" :data="tableData" border style="width: calc(100% - 20px);margin: 10px 10px 0;">
         <el-table-column prop="orderNumber" :label="lang[lang.lang].en6" align="center"></el-table-column>
         <el-table-column prop="uid" :label="lang[lang.lang].en62" align="center"></el-table-column>
+        <el-table-column prop="mobile" :label="lang.lang=='cn'?'聯繫號碼':'Contact Number'" align="center"></el-table-column>
+        <el-table-column prop="contact" :label="lang.lang=='cn'?'聯繫人':'Contact'" align="center"></el-table-column>
         <el-table-column prop="money" :label="lang[lang.lang].en90" align="center"></el-table-column>
         <el-table-column prop="createTime" :label="lang[lang.lang].en9" align="center" width="100"></el-table-column>
         <el-table-column prop="trace" :label="lang[lang.lang].en2" align="center">
@@ -133,6 +144,8 @@
         userInfo,
         genre:[],
         search:{
+          mobile:'',
+          contact:'',
           trace: "2",
           orderNumber: "",
           uid: "",

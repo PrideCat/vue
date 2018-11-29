@@ -9,7 +9,8 @@
         <b>
           <span>{{lang.lang=='cn'?"類型":"Type"}}：</span>
           <el-select v-model="search.type" @change="init">
-            <el-option :label="lang.lang=='cn'?'全部':'All'" :value="'-1'"></el-option>
+            <el-option :label="lang.lang=='cn'?'全部':'All'" :value="'-2'"></el-option>
+            <el-option :label="lang.lang=='cn'?'分享獎勵':'Sharing Rewards'" :value="'-1'"></el-option>
             <el-option :label="lang.lang=='cn'?'直推獎':'Direct Award'" :value="'0'"></el-option>
             <el-option :label="lang.lang=='cn'?'團隊獎':'Team Award'" :value="'2'"></el-option>
             <el-option :label="lang.lang=='cn'?'輔導獎':'Counseling Award'" :value="'1'"></el-option>
@@ -35,14 +36,15 @@
           <template slot-scope="scope">
             <span>
               {{
-                scope.row.type=="0"?(lang.lang=='cn'?"直推獎":"Direct Award"):
+                scope.row.type=="-1"?(lang.lang=='cn'?"分享獎勵":"Sharing Rewards"):
+                (scope.row.type=="0"?(lang.lang=='cn'?"直推獎":"Direct Award"):
                 (scope.row.type=="1"?(lang.lang=='cn'?"輔導獎":"Counseling Award"):
                 (scope.row.type=="2"?(lang.lang=='cn'?"團隊獎":"Team Award"):
                 (scope.row.type=="3"?(lang.lang=='cn'?"創業獎":"Business Award"):
                 (scope.row.type=="4"?(lang.lang=='cn'?"晉升獎":"Promotion Award"):
                 (scope.row.type=="5"?(lang.lang=='cn'?"領導獎":"Leadership Award"):
                 (scope.row.type=="6"?(lang.lang=='cn'?"本地分紅":"Local Dividend"):
-                (scope.row.type=="7"?(lang.lang=='cn'?"環球分紅":"Global Dividend"):"")))))))
+                (scope.row.type=="7"?(lang.lang=='cn'?"環球分紅":"Global Dividend"):""))))))))
               }}
             </span>
           </template>
@@ -237,7 +239,7 @@ export default {
       search: {
         no: 1,
         size: 10,
-        type:"-1",
+        type:"-2",
         // startDate:`${mYear}-${mMonth}-01`,
         // endDate:`${mYear}-${mMonth}-${mDay}`
         startDate: searchStartDate,
@@ -262,7 +264,7 @@ export default {
     },
     init() {
       let search = JSON.parse(JSON.stringify(this.search));
-      if(search.type==="-1")delete search.type;
+      if(search.type==="-2")delete search.type;
       this.api(this, "/reward/retrive", search, res => {
         console.log(res);
         // res.items.forEach(v => {
