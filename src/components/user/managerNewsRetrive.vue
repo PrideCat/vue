@@ -1,12 +1,18 @@
 <template>
-  <div>
+  <div id="managerNewsRetrive">
     <div v-title :data-title="lang[lang.lang].en145"></div>
     <div class="fromBox">
       <p class="form-title searchBox">
         <b>
           <span style="margin-left: 10px;">{{lang[lang.lang].en146}}：</span>
           <el-input v-model="search.name" @input="init"></el-input>
-          <span style="margin-left: 30px;">{{lang[lang.lang].en48}}：</span>
+          <span style="margin-left: 30px;">{{lang[lang.lang].en119}}：</span>
+          <el-select v-model="search.type" @change="init">
+            <el-option :label="item[lang.lang]" :value="item.id" v-for="item in genre"></el-option>
+          </el-select>
+        </b>
+        <b>
+          <span style="margin-left: 0;">{{lang[lang.lang].en48}}：</span>
           <el-date-picker style="width: 135px;" v-model="search.startDate" type="date" @change="init"></el-date-picker>
           <span style="margin: 0 5px;">{{lang[lang.lang].en49}}</span>
           <el-date-picker style="width: 135px;" v-model="search.endDate" type="date" @change="init"></el-date-picker>
@@ -41,6 +47,16 @@
               <li style="width: 100%;"><p><span style="width: 120px;">{{lang[lang.lang].en146}}</span><b><el-input v-model="winup.data.name"></el-input></b></p></li>
               <li style="width: 100%;">
                 <p>
+                  <span style="width: 120px;">{{lang[lang.lang].en119}}</span>
+                  <b>
+                    <el-select v-model="winup.data.type" :disabled="isEdit?'disabled':false">
+                      <el-option :label="item[lang.lang]" :value="item.id" v-for="item in genre"></el-option>
+                    </el-select>
+                  </b>
+                </p>
+              </li>
+              <li style="width: 100%;">
+                <p>
                   <span style="width: 120px;">{{lang[lang.lang].en121}}</span>
                   <b>
                     <label><input id="file" type="file" @change="upload" style="display: none;"><i style="font-size: 12px;cursor: pointer;color: #73b2ff;">{{lang[lang.lang].en109}}</i></label>
@@ -56,7 +72,7 @@
               </li>
             </ol>
           </li>
-          <li style="text-align: center;margin-top: 45px;">
+          <li style="text-align: center;">
             <div>
               <a href="javascript:void(0);" @click="winupClose(1)">{{lang[lang.lang].en107}}</a>
             </div>
@@ -92,11 +108,16 @@
         nationalitysWin,
         nationalitys,
         userInfo,
-        genre:[],
+        genre:[
+          {cn:"新聞中心",en:'News Center',id:0},
+          {cn:"公司事件",en:'Company Event',id:1},
+          {cn:"關愛社會",en:'Caring For Society',id:2}
+        ],
         search:{
           name:"", 
-          startDate:`${mYear}-${mMonth}-01`,
-          endDate:`${mYear}-${mMonth}-${mDay}`,
+          type:0,
+          startDate:new Date(mYear,mMonth-2,1),
+          endDate:new Date(mYear,mMonth-1,1),
           no:1, 
           size:10
         },
@@ -106,6 +127,7 @@
           isShow:false,
           data:{}
         },
+        isEdit:false,
         remark:""
       };
     },
@@ -132,6 +154,7 @@
         let formData = new FormData();
         formData.append("name",this.winup.data.name);
         formData.append("content",this.winup.data.content);
+        if(!id)formData.append("type",this.winup.data.type);
         if(this.winup.data.filedata)formData.append("filedata",this.winup.data.filedata);
         if(id)formData.append("id",id);
         if(isSubmit){
@@ -146,10 +169,13 @@
       },
       showTheWinup(data){
         this.winup.isShow = true;
-        if(data)
-          this.winup.data = {id:data.id,name:data.name,file:data.pic,filedata:"",content:data.content};
-        else
-          this.winup.data = {id:"",name:"",file:"",filedata:"",content:""};
+        if(data){
+          this.isEdit = true;
+          this.winup.data = {id:data.id,name:data.name,file:data.pic,filedata:"",content:data.content,type:data.type};
+        }else{
+          this.isEdit = false;
+          this.winup.data = {id:"",name:"",file:"",filedata:"",content:"",type:0};
+        }
       },
       remove(item){
         this.$confirm(this.lang[this.lang.lang].en156).then(_ => {

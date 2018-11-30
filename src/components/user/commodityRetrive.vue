@@ -1,14 +1,14 @@
 <template>
-  <div>
+  <div id="commodityRetrive">
     <div v-title :data-title="lang[lang.lang].en118"></div>
     <div class="fromBox">
       <p class="form-title searchBox">
         <b>
           <span>{{lang[lang.lang].en119}}：</span>
-          <el-select v-model="search.genre" @change="init">
-            <el-option :label="item.name" :value="item.id" v-for="item in genre"></el-option>
+          <el-select v-model="search.type" @change="init">
+            <el-option :label="item[lang.lang]" :value="item.id" v-for="item in genre"></el-option>
           </el-select>
-          <span style="margin-left: 30px;">{{lang[lang.lang].en100}}：</span>
+          <span style="margin-left: 5px;">{{lang[lang.lang].en100}}：</span>
           <el-input v-model="search.name" @input="init"></el-input>
         </b>
         <b><el-button @click="showTheWinup()">{{lang[lang.lang].en98}}</el-button></b>
@@ -16,7 +16,7 @@
       <el-table :class="lang.lang=='en'?'langIsEn':''" :data="tableData" border style="width: calc(100% - 20px);margin: 10px 10px 0;">
         <el-table-column prop="name" :label="lang[lang.lang].en100" align="center"></el-table-column>
         <el-table-column prop="genre" :label="lang[lang.lang].en119" align="center">
-          <template slot-scope="scope"><b v-if="item.id==scope.row.genre" v-for="item in genre">{{item.name}}</b></template>
+          <template slot-scope="scope"><b v-if="item.id==scope.row.type" v-for="item in genre">{{item[lang.lang]}}</b></template>
         </el-table-column>
         <el-table-column prop="money" :label="lang[lang.lang].en90" align="center"></el-table-column>
         <el-table-column prop="pic" :label="lang[lang.lang].en121" align="center">
@@ -49,8 +49,8 @@
                 <p>
                   <span>{{lang[lang.lang].en119}}</span>
                   <b>
-                    <el-select v-model="winup.data.genre" @change="init">
-                      <el-option :label="item.name" :value="item.id" v-for="item in genre"></el-option>
+                    <el-select v-model="winup.data.type" :disabled="isEdit?'disabled':false">
+                      <el-option :label="item[lang.lang]" :value="item.id" v-for="item in genre"></el-option>
                     </el-select>
                   </b>
                 </p>
@@ -65,7 +65,16 @@
                   </b>
                 </p>
               </li>
+              <li style="width: 100%;position: relative;top: 15px;"><p><span>{{lang[lang.lang].en161}}</span><b></b></p></li>
+              <li style="width: 100%;line-height: 1;">
+                <p style="width: inherit;">
+                    <quill-editor class="theEditor" style="width: inherit;margin: 0 10px;" v-model="winup.data.content"></quill-editor>
+                </p>
+              </li>
               <li style="width: 100%;"><p><span>{{lang[lang.lang].en90}}</span><b><el-input type="number" v-model="winup.data.money"></el-input></b></p></li>
+              <li style="width: 100%;" v-if="winup.data.type==1"><p><span>{{lang.lang=='cn'?'零售':'retail'}}</span><b><el-input type="number" v-model="winup.data.retail"></el-input></b></p></li>
+              <li style="width: 100%;"><p><span>{{lang.lang=='cn'?'BV積分':'BV points'}}</span><b><el-input type="number" v-model="winup.data.integral"></el-input></b></p></li>
+              <li style="width: 100%;"><p><span>{{lang.lang=='cn'?'PV積分':'PV points'}}</span><b><el-input type="number" v-model="winup.data.tourism"></el-input></b></p></li>
             </ol>
           </li>
           <li style="text-align: center;">
@@ -97,9 +106,13 @@
         nationalitysWin,
         nationalitys,
         userInfo,
-        genre:[],
+        genre:[
+          {cn:"會員",en:'Member',id:1},
+          {cn:"進階",en:'Advanced',id:2},
+          {cn:"尊享",en:'Exclusive',id:3}
+        ],
         search:{
-          genre:"",
+          type:1,
           name:"", 
           no:1,
           size:10
@@ -108,9 +121,10 @@
         tableData:[],
         winup:{
           isShow:false,
-          data:{id:"",name:"",file:"",filedata:"",genre:"",money:""}
+          data:{id:"",name:"",file:"",filedata:"",type:1,money:"",retail:"",content:"",integral:"",tourism:""}
         },
-        remark:""
+        remark:"",
+        isEdit:false
       };
     },
     methods: {
@@ -133,12 +147,25 @@
         document.getElementById("file").value="";
         let id = this.winup.data.id;
         let formData = new FormData();
-        formData.append("name",this.winup.data.name);
-        formData.append("genre",this.winup.data.genre);
-        formData.append("money",this.winup.data.money);
-        if(this.winup.data.filedata)formData.append("filedata",this.winup.data.filedata);
-        if(id)formData.append("id",id);
         if(isSubmit){
+          formData.append("name",this.winup.data.name);
+          if(!id)formData.append("type",this.winup.data.type);
+          formData.append("money",this.winup.data.money);
+          formData.append("content",this.winup.data.content);
+          formData.append("integral",this.winup.data.integral);
+          formData.append("tourism",this.winup.data.tourism);
+          if(this.winup.data.filedata)formData.append("filedata",this.winup.data.filedata);
+          if(id)formData.append("id",id);
+          if(!this.winup.data.name){this.$message.error(this.lang.lang=="cn"?"請輸入名稱！":"Please enter a name!");return;}
+          if(!this.winup.data.filedata&&!id){this.$message.error(this.lang.lang=="cn"?"請選擇縮略圖！":"Please select a thumbnail!");return;}
+          if(!this.winup.data.money){this.$message.error(this.lang.lang=="cn"?"請輸入金額！":"Please enter the amount!");return;}
+          if(!this.winup.data.content){this.$message.error(this.lang.lang=="cn"?"請輸入內容！":"Please enter the content!");return;}
+          if(!this.winup.data.integral){this.$message.error(this.lang.lang=="cn"?"請輸入BV積分！":"Please enter BV points!");return;}
+          if(!this.winup.data.tourism){this.$message.error(this.lang.lang=="cn"?"請輸入PV積分！":"Please enter PV points!");return;}
+          if(this.winup.data.type==1){
+            formData.append("retail",this.winup.data.retail);
+            if(!this.winup.data.retail){this.$message.error(this.lang.lang=="cn"?"請輸入零售！":"Please enter retail!");return;}
+          }
           this.api(this, id?'/manager/commodity/modify':'/manager/commodity/add', formData, res => {
             console.log(res);
             this.init();
@@ -150,10 +177,13 @@
       },
       showTheWinup(data){
         this.winup.isShow = true;
-        if(data)
-          this.winup.data = {id:data.id,name:data.name,file:data.pic,filedata:"",genre:data.genre,money:data.money};
-        else
-          this.winup.data = {id:"",name:"",file:"",filedata:"",genre:"",money:""};
+        if(data){
+          this.winup.data = {id:data.id,name:data.name,file:data.pic,filedata:"",type:data.type,money:data.money,retail:data.retail,content:data.content,integral:data.integral,tourism:data.tourism};
+          this.isEdit=true;
+        }else{
+          this.winup.data = {id:"",name:"",file:"",filedata:"",type:1,money:"",retail:"",content:"",integral:"",tourism:""};
+          this.isEdit=false;
+        }
       },
       remove(item){
         this.$confirm(this.lang[this.lang.lang].en123).then(_ => {
@@ -195,17 +225,18 @@
       }
     },
     mounted(){
-      this.api(this, '/manager/genre/retrive', {no:1,size:10}, res => {
-        console.log(res);
-        this.genre = res.items;
-        this.search.genre = res.items[0].id;
-        this.init();
-      });
+      // this.api(this, '/manager/genre/retrive', {no:1,size:10}, res => {
+      //   console.log(res);
+      //   this.genre = res.items;
+      //   this.search.genre = res.items[0].id;
+      //   this.init();
+      // });
     },
     created(){
       this.$root.$on("selectLang",res=>{
         this.lang.lang = res;
       })
+      this.init();
     }
   }
 </script>

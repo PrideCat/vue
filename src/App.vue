@@ -462,6 +462,8 @@
     				text-align: left;
 				}
 				#retrive .searchBox button{display:none;}
+				#managerNewsRetrive .winup>div>ul>li:first-child ol li p span{width:60px !important;}
+				#commodityRetrive .winup>div>ul>li:first-child ol li p span{width:60px !important;}
 			</style>`;
     	return {isCollapse,styleDom}
     },
