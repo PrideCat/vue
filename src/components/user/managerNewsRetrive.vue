@@ -116,8 +116,8 @@
         search:{
           name:"", 
           type:0,
-          startDate:new Date(mYear,mMonth-2,1),
-          endDate:new Date(mYear,mMonth-1,1),
+          startDate:new Date(mYear,mMonth-1,1),
+          endDate:new Date(mYear,mMonth,1),
           no:1, 
           size:10
         },
@@ -157,6 +157,9 @@
         if(!id)formData.append("type",this.winup.data.type);
         if(this.winup.data.filedata)formData.append("filedata",this.winup.data.filedata);
         if(id)formData.append("id",id);
+        if(!this.winup.data.name){this.$message.error(this.lang.lang=="cn"?"請輸入標題！":"Please enter a title!");return;}
+        if(!this.winup.data.filedata&&!id){this.$message.error(this.lang.lang=="cn"?"請選擇縮略圖！":"Please select a thumbnail!");return;}
+        if(!this.winup.data.content){this.$message.error(this.lang.lang=="cn"?"請輸入內容！":"Please enter the content!");return;}
         if(isSubmit){
           this.api(this, id?'/manager/news/modify':'/manager/news/add', formData, res => {
             console.log(res);

@@ -131,22 +131,23 @@
             this.islogin = false;
             sessionStorage.setItem("userInfoStorage", JSON.stringify(res));
             sessionStorage.setItem("userStorage", JSON.stringify({uid, password}));
-            if(sessionStorage.getItem("inMellToLogin")=="1"){
-              delete sessionStorage.inMellToLogin;
-              window.location.href="../mall/index.html";
-            }
-            if(sessionStorage.getItem("goOrder")=="1"){
-              this.$router.push('/user/order');
-              delete sessionStorage.goOrder;
-            }else if(sessionStorage.getItem("toMember")=="1"){
-              this.$router.push('/user/index');
-              delete sessionStorage.toMember;
-            }
+            
             if(this.global.userInfo.agreement==0&&!(this.global.userInfo.type==0&&(this.global.userInfo.rank==1||this.global.userInfo.rank==2))){
               this.$router.push('/user/agreement');
             }else if((this.global.userInfo.activate==0||this.global.userInfo.activate==1)&&!(this.global.userInfo.type==0&&(this.global.userInfo.rank==1||this.global.userInfo.rank==2))){
               this.$router.push('/user/activate');
             }else{
+              if(sessionStorage.getItem("inMellToLogin")=="1"){
+                delete sessionStorage.inMellToLogin;
+                window.location.href="../mall/index.html";
+              }
+              if(sessionStorage.getItem("goOrder")=="1"){
+                this.$router.push('/user/order');
+                delete sessionStorage.goOrder;
+              }else if(sessionStorage.getItem("toMember")=="1"){
+                this.$router.push('/user/index');
+                delete sessionStorage.toMember;
+              }
               this.$router.push('/user/index');
             }
           // }, _ => {
