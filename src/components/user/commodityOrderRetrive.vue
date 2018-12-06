@@ -150,7 +150,7 @@
           orderNumber: "",
           uid: "",
           startDate:`${mYear}-${mMonth}-01`,
-          endDate:`${mYear}-${mMonth+1}-01`,
+          endDate:`${mMonth==12?mYear+1:mYear}-${mMonth==12?'01':mMonth+1}-01`,
           no: 1, 
           size: 10
         },
