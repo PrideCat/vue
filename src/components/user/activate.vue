@@ -427,12 +427,12 @@
           this.$parent.$parent.$parent.$parent.userInfo = res;
           sessionStorage.userInfoStorage = JSON.stringify(res);
           this.global.userInfo = res;
-          if(res.activate==2){
-            clearInterval(settimeout);
-            this.$router.push('/user/index');
-          }else if(res.activate==1){
-            this.hasActivate=userInfo.property=='0'||userInfo.property=='1'?true:false;
-          }
+          // if(res.activate==2){
+          //   clearInterval(settimeout);
+          //   this.$router.push('/user/index');
+          // }else if(res.activate==1){
+          //   this.hasActivate=userInfo.property=='0'||userInfo.property=='1'?true:false;
+          // }
         });
       };
       const userInfo = this.userInfo;

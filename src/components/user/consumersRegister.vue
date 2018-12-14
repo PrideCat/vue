@@ -402,7 +402,14 @@
         this.$refs.form.validate(valid => {
           if (valid) {
             console.log(t.form);
-            this.winup.isShow = true;
+            if(!this.form.code){
+              this.getCode();
+              setTimeout(_ => {
+                this.$refs.form.validateField(["code"]);
+              }, 1);
+            }else{
+              this.winup.isShow = true;
+            }
           } else {
             console.log('error submit!!');
             return false;

@@ -52,7 +52,7 @@
             <el-input v-model="form.EnglishName" :placeholder="lang[lang.lang].editEnglishName"></el-input>
           </el-form-item>
           <el-form-item :label="lang[lang.lang].email" prop="email">
-            <el-input v-model="form.email" :placeholder="lang[lang.lang].editemail"></el-input><b v-if="hasEmail" style="border:1px solid #ccc;font-size:12px;padding:1px 5px;background:#f1f1f1;color:#606266;cursor:pointer;position: relative;right: 72px;" @click="getCode" ref="email">{{lang.lang=='cn'?"獲取驗證碼":'get verification code'}}</b>
+            <el-input v-model="form.email" :placeholder="lang[lang.lang].editemail"></el-input><b v-show="hasEmail" style="border:1px solid #ccc;font-size:12px;padding:1px 5px;background:#f1f1f1;color:#606266;cursor:pointer;position: relative;right: 72px;" @click="getCode" ref="email">{{lang.lang=='cn'?"獲取驗證碼":'get verification code'}}</b>
           </el-form-item>
           <el-form-item :label="lang.lang=='cn'?'驗證碼':'Verification Code'" prop="code" v-if="hasCode">
             <el-input v-model="form.code" :placeholder="lang.lang=='cn'?'請輸入驗證碼':'please enter verification code'"></el-input>
@@ -275,7 +275,8 @@
           // EnglishName: "EnglishName",
           // email: "13456@qq.com",
           // phone: "88888888",
-          // mobile: "13846578912",
+          // // mobile: "13846578912",
+          // mobile: "66578912",
           // identification: "P103265(1)",
           // password: "123",
           // password2: "123",
@@ -387,7 +388,14 @@
         this.$refs.form.validate(valid => {
           if (valid) {
             console.log(t.form);
-            this.winup.isShow = true;
+            if(!this.form.code){
+              this.getCode();
+              setTimeout(_ => {
+                this.$refs.form.validateField(["code"]);
+              }, 1);
+            }else{
+              this.winup.isShow = true;
+            }
           } else {
             console.log('error submit!!');
             return false;

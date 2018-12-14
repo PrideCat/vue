@@ -95,7 +95,7 @@
                       <p>{{items.name}}</p>
                     </div>
                     <div>
-                      <p>hkd {{items.money}}</p>
+                      <p>USD {{items.money}}</p>
                       <!-- <p>16 BV</p> -->
                     </div>
                     <div>X{{items.amount}}</div>
@@ -103,7 +103,7 @@
                 </ol>
               </div>
               <div style="width:100%;">
-                <p>HKD {{item.money}}</p>
+                <p>USD {{item.money}}</p>
                 <a v-if="item.trace==1" href="javascript:void(0);" @click="showPay(item.money,item.orderNumber)">{{lang.lang=='cn'?'付款':'Payment'}}</a>
                 <!-- <p>16 bv</p>
                 <p>
