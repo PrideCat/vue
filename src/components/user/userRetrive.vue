@@ -221,7 +221,7 @@
       winupClose(uid,isNo){
         if(uid){
           this.winup.isShow = false;
-          this.$confirm(isNo?(this.lang.lang=="cn"?"確認不激活該會員？":"Confirm that the member is not activated?"):this.lang[this.lang.lang].en113).then(_ => {
+          this.$confirm(isNo?(this.lang.lang=="cn"?"確認不激活該會員？":"Confirm that the member is not activated?"):(this.lang.lang=="cn"?"確認激活該會員？":"Confirm activation of this member?")).then(_ => {
             this.api(this, '/manager/user/audit', {uid,activate:isNo?0:2}, res => {
               console.log(res);
               this.init();
