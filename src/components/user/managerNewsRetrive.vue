@@ -154,13 +154,13 @@
         let formData = new FormData();
         formData.append("name",this.winup.data.name);
         formData.append("content",this.winup.data.content);
-        if(!id)formData.append("type",this.winup.data.type);
-        if(this.winup.data.filedata)formData.append("filedata",this.winup.data.filedata);
-        if(id)formData.append("id",id);
-        if(!this.winup.data.name){this.$message.error(this.lang.lang=="cn"?"請輸入標題！":"Please enter a title!");return;}
-        if(!this.winup.data.filedata&&!id){this.$message.error(this.lang.lang=="cn"?"請選擇縮略圖！":"Please select a thumbnail!");return;}
-        if(!this.winup.data.content){this.$message.error(this.lang.lang=="cn"?"請輸入內容！":"Please enter the content!");return;}
         if(isSubmit){
+          if(!id)formData.append("type",this.winup.data.type);
+          if(this.winup.data.filedata)formData.append("filedata",this.winup.data.filedata);
+          if(id)formData.append("id",id);
+          if(!this.winup.data.name){this.$message.error(this.lang.lang=="cn"?"請輸入標題！":"Please enter a title!");return;}
+          if(!this.winup.data.filedata&&!id){this.$message.error(this.lang.lang=="cn"?"請選擇縮略圖！":"Please select a thumbnail!");return;}
+          if(!this.winup.data.content){this.$message.error(this.lang.lang=="cn"?"請輸入內容！":"Please enter the content!");return;}
           this.api(this, id?'/manager/news/modify':'/manager/news/add', formData, res => {
             console.log(res);
             setTimeout(_=>{this.init();},1000);
