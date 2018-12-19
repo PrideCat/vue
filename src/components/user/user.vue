@@ -118,7 +118,8 @@
     <router-view name="agree"/>
     <router-view name="forgetPassword"/>
     <div class="foot">
-      <p>{{lang[lang.lang].en53}} | {{lang[lang.lang].en54}} | {{lang[lang.lang].en55}} | {{lang[lang.lang].en56}} | {{lang[lang.lang].en57}}</p>
+      <!-- <p>{{lang[lang.lang].en53}} | {{lang[lang.lang].en54}} | {{lang[lang.lang].en55}} | {{lang[lang.lang].en56}} | {{lang[lang.lang].en57}}</p> -->
+      <p><a @click="toMall">{{lang[lang.lang].en53}}</a> | <a @click="toMall">{{lang[lang.lang].en57}}</a></p>
       <p>© 2018. Headwind International. All Rights Reserved.</p>
     </div>
     <div class="winup" id="DailyReminder" v-if="winup.isShow">
