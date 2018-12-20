@@ -60,13 +60,13 @@
           <!--<user-header-info :lang="lang.lang" @selected="selectLang"></user-header-info>-->
           <ul id="info">
             <li>
-              <router-link tag="div" to="modify">
+              <router-link tag="div" :to="{name:'modify'}">
                 <p><img src="../../../static/img/user.png" height="30" width="24"/></p>
                 <p>{{lang[lang.lang].en50}}</p>
               </router-link>
             </li>
             <li>
-              <router-link tag="div" to="announce">
+              <router-link tag="div" :to="{name:'announce'}">
                 <p><img src="../../../static/img/notic.png" height="28" width="25"/></p>
                 <p>{{lang[lang.lang].en51}}</p>
               </router-link>

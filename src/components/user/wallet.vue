@@ -66,7 +66,7 @@
               <tbody>
                 <tr><td>{{lang[lang.lang].en62}}</td><td>{{winup.data.uid}}</td></tr>
                 <tr><td>{{lang[lang.lang].en48}}</td><td>{{winup.data.createTime}}</td></tr>
-                <tr><td>{{lang[lang.lang].en89}}</td><td>{{winup.data.type==0?lang[lang.lang].Recharge:(winup.data.type==1?lang[lang.lang].en81:lang[lang.lang].en82)}}</td></tr>
+                <tr><td>{{lang[lang.lang].en89}}</td><td>{{winup.data.type==1?lang[lang.lang].Recharge:(winup.data.type==2?lang[lang.lang].en81:(winup.data.type==3?lang[lang.lang].en82:(winup.data.type==4?lang[lang.lang].en83:(winup.data.type==5?lang[lang.lang].en84:""))))}}</td></tr>
                 <tr><td>{{lang[lang.lang].en90}}</td><td>{{winup.data.money}}</td></tr>
                 <tr><td>{{lang[lang.lang].en91}}</td><td>{{winup.data.balance}}</td></tr>
                 <tr><td>{{lang[lang.lang].en92}}</td><td>{{winup.data.remark}}</td></tr>

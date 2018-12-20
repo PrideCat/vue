@@ -271,15 +271,15 @@
           track: userInfo.deaultTrack?userInfo.deaultTrack.toString():"0"
 
 
-          // ,compellation: "中文名字",
-          // EnglishName: "EnglishName",
-          // email: "13456@qq.com",
-          // phone: "88888888",
-          // // mobile: "13846578912",
-          // mobile: "66578912",
-          // identification: "P103265(1)",
-          // password: "123",
-          // password2: "123",
+          ,compellation: "中文名字",
+          EnglishName: "EnglishName",
+          email: "13456@qq.com",
+          phone: "88888888",
+          // mobile: "13846578912",
+          mobile: "66578912",
+          identification: "P103265(1)",
+          password: "123",
+          password2: "123",
           
           // ruid: '13812345678',
           // ruName: '',

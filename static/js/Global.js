@@ -238,7 +238,7 @@ const menuArray = [{
       activate: '激活狀態異常',
       bank: '請先完善銀行信息',
       balance: '賬號餘額不足，請先充值',
-      email: '郵箱不正確',
+      email: '該郵箱已被使用',
       certificate: '憑證不存在',
       overdue: '憑證已過期',
       code: '驗證碼錯誤',
@@ -260,7 +260,7 @@ const menuArray = [{
       activate: 'Abnormal activation state',
       bank: 'Please improve bank information first',
       balance: 'Insufficient account balance, please recharge first',
-      email: 'Incorrect email',
+      email: 'The mailbox has been used',
       certificate: 'Credentials do not exist',
       overdue: 'Certificate expired',
       code: 'Verification code error',
@@ -318,15 +318,15 @@ let menuArrayIndexs = [],
   menuData = []
 menuArray.forEach(function (v) {
   let i
-    menuArrayIndexs.push(v.index)
-    if (v.index.indexOf('-') === -1) {
+  menuArrayIndexs.push(v.index)
+  if (v.index.indexOf('-') === -1) {
     menuDataIndexs.push(v.index)
-        menuData.push(v)
-    } else {
+    menuData.push(v)
+  } else {
     i = menuDataIndexs.indexOf(v.index.split('-')[0])
-        if (!menuData[i].children) menuData[i].children = []
-        menuData[i].children.push(v)
-    }
+    if (!menuData[i].children) menuData[i].children = []
+    menuData[i].children.push(v)
+  }
 })
 const global = {
   isCollapse,
@@ -2034,18 +2034,18 @@ const global = {
   ],
   updateUserInfo (data) {
     sessionStorage.setItem('userInfoStorage', JSON.stringify(data))
-        this.isNewUserInfo = false
-    }
+    this.isNewUserInfo = false
+  }
 }
 
 function commandEntity (parameters) {
   this.RequestData = {}
 
-    for (var _p in parameters) {
+  for (var _p in parameters) {
     var vauleJson = JSON.stringify(parameters[_p])
-        var _js = 'this.RequestData.' + _p + '=' + vauleJson
-        eval(_js)
-    }
+    var _js = 'this.RequestData.' + _p + '=' + vauleJson
+    eval(_js)
+  }
 
   return this.RequestData
 }
@@ -2053,19 +2053,18 @@ function commandEntity (parameters) {
 function parseResponse (_data) {
   switch (_data.result) {
     case 'url':
-      if (isURL(_data.data))
-        {window.top.location.replace(_data.data);}
+      if (isURL(_data.data)) { window.top.location.replace(_data.data) }
       return
-    }
+  }
 
   return _data
 }
 
 const ajax = (ashx, parameters, callback, isForm) => {
   const _data = new commandEntity(parameters)
-    let _isSuccess
+  let _isSuccess
 
-    $.ajax({
+  $.ajax({
     type: 'POST',
     contentType: isForm ? false : 'application/json',
     url: ashx,
@@ -2077,12 +2076,12 @@ const ajax = (ashx, parameters, callback, isForm) => {
     },
     'error': function (err) {
       _data.ResponseData = err
-            _isSuccess = false
-        },
+      _isSuccess = false
+    },
     'success': function (msg) {
       _data.ResponseData = parseResponse(msg)
-            _isSuccess = true
-        },
+      _isSuccess = true
+    },
     'complete': function (msg) {
       if (this.async) {
         callback(_isSuccess ? _data.ResponseData : msg, _isSuccess)
@@ -2090,26 +2089,26 @@ const ajax = (ashx, parameters, callback, isForm) => {
     }
   })
 
-    return _data.ResponseData
-};
+  return _data.ResponseData
+}
 
 const api = (vue, apiName, params, callback, errorCallback, allData, isForm, isAsync, arePop) => {
   if (isAsync) {
     let res = ajax(apiUrl + apiName, params)
-        switch (res.result) {
+    switch (res.result) {
       case 'success':
         // console.log(apiName,params);
         if (res.root) res.data.root = res.root
-                if (callback) callback(allData ? res : res.data)
-                break;
-      case 'login':
+        if (callback) callback(allData ? res : res.data)
+        break
+            case 'login':
         // if (window.location.pathname.split("/").reverse()[0] !== "login.html") {
         //   sessionStorage.setItem("gotoLogin", window.location.href);
         //   location.href = "../auth/login.html";
         // }
         vue.$router.push('/')
-                break;
-      case 'failure':
+        break
+            case 'failure':
       case 'inexistence':
       case 'mobile':
       case 'referee':
@@ -2130,14 +2129,14 @@ const api = (vue, apiName, params, callback, errorCallback, allData, isForm, isA
       case 'balance':
       case 'bank':
         if (!arePop) vue.$message.error(ajaxResLang[vue.lang.lang][res.result])
-                if (errorCallback) errorCallback(res.result, ajaxResLang)
-                console.log(apiName, res.result, ajaxResLang[vue.lang.lang][res.result])
-                break;
-      default:
+        if (errorCallback) errorCallback(res.result, ajaxResLang)
+        console.log(apiName, res.result, ajaxResLang[vue.lang.lang][res.result])
+        break
+            default:
         if (!arePop) vue.$message.error(res.result)
-                if (errorCallback) errorCallback(res.result, ajaxResLang)
-                break;
-    }
+        if (errorCallback) errorCallback(res.result, ajaxResLang)
+        break
+        }
   } else {
     ajax(apiUrl + apiName, params, res => {
       // console.log(res);
@@ -2145,16 +2144,16 @@ const api = (vue, apiName, params, callback, errorCallback, allData, isForm, isA
         case 'success':
           // console.log(apiName,params);
           if (res.root) res.data.root = res.root
-                    if (callback) callback(allData ? res : res.data)
-                    break;
-        case 'login':
+          if (callback) callback(allData ? res : res.data)
+          break
+                case 'login':
           // if (window.location.pathname.split("/").reverse()[0] !== "login.html") {
           //   sessionStorage.setItem("gotoLogin", window.location.href);
           //   location.href = "../auth/login.html";
           // }
           vue.$router.push('/')
-                    break;
-        case 'failure':
+          break
+                case 'failure':
         case 'inexistence':
         case 'mobile':
         case 'referee':
@@ -2175,16 +2174,16 @@ const api = (vue, apiName, params, callback, errorCallback, allData, isForm, isA
         case 'balance':
         case 'bank':
           if (!arePop) vue.$message.error(ajaxResLang[vue.lang.lang][res.result])
-                    if (errorCallback) errorCallback(res.result, ajaxResLang)
-                    console.log(apiName, res.result, ajaxResLang[vue.lang.lang][res.result])
-                    break;
-        default:
+          if (errorCallback) errorCallback(res.result, ajaxResLang)
+          console.log(apiName, res.result, ajaxResLang[vue.lang.lang][res.result])
+          break
+                default:
           if (!arePop) vue.$message.error(res.result)
-                    if (errorCallback) errorCallback(res.result, ajaxResLang)
-                    break;
-      }
+          if (errorCallback) errorCallback(res.result, ajaxResLang)
+          break
+            }
     }, isForm)
-    }
+  }
 }
 
 export { global, api }
