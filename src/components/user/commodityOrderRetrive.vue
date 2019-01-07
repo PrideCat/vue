@@ -173,6 +173,8 @@
         this.init();
       },
       init(){
+        // let search = JSON.parse(JSON.stringify(this.search));
+        // if(search.trace)search.trace *=1; 
         this.api(this, '/manager/commodity/order/retrive', this.search, res => {
           console.log(res);
           this.tableData = res.items;

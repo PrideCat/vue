@@ -57,7 +57,7 @@ const menuArray = [{
     // },
   {
     index: '4-3',
-    cn: '修改密碼',
+    cn: '更改密碼',
     en: 'Change Password',
     url: 'password.html'
   },
@@ -124,7 +124,7 @@ const menuArray = [{
   },
   {
     index: '6-5',
-    cn: '安全密碼',
+    cn: '系統交易密碼',
     en: 'Security Code',
     url: 'paymentPassword.html'
   },
@@ -269,49 +269,207 @@ const menuArray = [{
       phone: 'This phone number is already in use'
     }
   },
-  banks = [
-    { val: '香港上海滙豐銀行', cn: '香港上海滙豐銀行', en: 'The Hongkong and Shanghai Banking Corporation Limited' },
-    { val: '中國銀行（香港）', cn: '中國銀行（香港）', en: 'Bank of China (Hong Kong) Limited' },
-    { val: '恒生銀行', cn: '恒生銀行', en: 'Hang Seng Bank Limited' },
-    { val: '渣打銀行（香港）', cn: '渣打銀行（香港）', en: 'Standard Chartered Bank (Hong Kong) Limited' },
-    { val: '中國工商銀行（亞洲）', cn: '中國工商銀行（亞洲）', en: 'Industrial and Commercial Bank of China (Asia)' },
-    { val: '東亞銀行', cn: '東亞銀行', en: 'The Bank of East Asia Limited' },
-    { val: '中國建設銀行（亞洲）', cn: '中國建設銀行（亞洲）', en: 'China Construction Bank (Asia) Corporation Limited' },
-    { val: '星展銀行（香港）', cn: '星展銀行（香港）', en: 'DBS Bank (Hong Kong) Limited' },
-    { val: '南洋商業銀行', cn: '南洋商業銀行', en: 'Nanyang Commercial Bank' },
-    { val: '中信銀行（國際）', cn: '中信銀行（國際）', en: 'China CITIC Bank International Limited' },
-    { val: '永隆銀行', cn: '永隆銀行', en: 'Wing Lung Bank Limited' },
-    { val: '華僑永亨銀行', cn: '華僑永亨銀行', en: 'OCBC Wing Hang Bank Limited' },
-    { val: '大新銀行', cn: '大新銀行', en: 'Dah Sing Bank Limited' },
-    { val: '上海商業銀行', cn: '上海商業銀行', en: 'Shanghai Commercial Bank' },
-    { val: '花旗銀行（香港）', cn: '花旗銀行（香港）', en: 'CitiBank (Hong Kong) Limited' },
-    { val: '創興銀行', cn: '創興銀行', en: 'Chong Hing Bank' },
-    { val: '富邦銀行（香港）', cn: '富邦銀行（香港）', en: 'Fubon Bank (Hong Kong) Limited' },
-    { val: '集友銀行', cn: '集友銀行', en: 'Chiyu Banking Corporation Limited' },
-    { val: '大眾銀行（香港）', cn: '大眾銀行（香港）', en: 'Public Bank (Hong Kong) Limited' },
-    { val: '大有銀行', cn: '大有銀行', en: 'TAI YAU BANK LIMITED' },
-    { val: '大生銀行', cn: '大生銀行', en: 'Tai Sang Bank' },
-    { val: '交通銀行（香港）', cn: '交通銀行（香港）', en: 'BANK OF COMMUNICATIONS CO. LTD.' }
+  banks = [{
+    val: '香港上海滙豐銀行',
+    cn: '香港上海滙豐銀行',
+    en: 'The Hongkong and Shanghai Banking Corporation Limited'
+  },
+  {
+    val: '中國銀行（香港）',
+    cn: '中國銀行（香港）',
+    en: 'Bank of China (Hong Kong) Limited'
+  },
+  {
+    val: '恒生銀行',
+    cn: '恒生銀行',
+    en: 'Hang Seng Bank Limited'
+  },
+  {
+    val: '渣打銀行（香港）',
+    cn: '渣打銀行（香港）',
+    en: 'Standard Chartered Bank (Hong Kong) Limited'
+  },
+  {
+    val: '中國工商銀行（亞洲）',
+    cn: '中國工商銀行（亞洲）',
+    en: 'Industrial and Commercial Bank of China (Asia)'
+  },
+  {
+    val: '東亞銀行',
+    cn: '東亞銀行',
+    en: 'The Bank of East Asia Limited'
+  },
+  {
+    val: '中國建設銀行（亞洲）',
+    cn: '中國建設銀行（亞洲）',
+    en: 'China Construction Bank (Asia) Corporation Limited'
+  },
+  {
+    val: '星展銀行（香港）',
+    cn: '星展銀行（香港）',
+    en: 'DBS Bank (Hong Kong) Limited'
+  },
+  {
+    val: '南洋商業銀行',
+    cn: '南洋商業銀行',
+    en: 'Nanyang Commercial Bank'
+  },
+  {
+    val: '中信銀行（國際）',
+    cn: '中信銀行（國際）',
+    en: 'China CITIC Bank International Limited'
+  },
+  {
+    val: '永隆銀行',
+    cn: '永隆銀行',
+    en: 'Wing Lung Bank Limited'
+  },
+  {
+    val: '華僑永亨銀行',
+    cn: '華僑永亨銀行',
+    en: 'OCBC Wing Hang Bank Limited'
+  },
+  {
+    val: '大新銀行',
+    cn: '大新銀行',
+    en: 'Dah Sing Bank Limited'
+  },
+  {
+    val: '上海商業銀行',
+    cn: '上海商業銀行',
+    en: 'Shanghai Commercial Bank'
+  },
+  {
+    val: '花旗銀行（香港）',
+    cn: '花旗銀行（香港）',
+    en: 'CitiBank (Hong Kong) Limited'
+  },
+  {
+    val: '創興銀行',
+    cn: '創興銀行',
+    en: 'Chong Hing Bank'
+  },
+  {
+    val: '富邦銀行（香港）',
+    cn: '富邦銀行（香港）',
+    en: 'Fubon Bank (Hong Kong) Limited'
+  },
+  {
+    val: '集友銀行',
+    cn: '集友銀行',
+    en: 'Chiyu Banking Corporation Limited'
+  },
+  {
+    val: '大眾銀行（香港）',
+    cn: '大眾銀行（香港）',
+    en: 'Public Bank (Hong Kong) Limited'
+  },
+  {
+    val: '大有銀行',
+    cn: '大有銀行',
+    en: 'TAI YAU BANK LIMITED'
+  },
+  {
+    val: '大生銀行',
+    cn: '大生銀行',
+    en: 'Tai Sang Bank'
+  },
+  {
+    val: '交通銀行（香港）',
+    cn: '交通銀行（香港）',
+    en: 'BANK OF COMMUNICATIONS CO. LTD.'
+  }
   ],
-  area = [
-    { val: '中西区', cn: '中西区', en: 'Central and Western District' },
-    { val: '东区', cn: '东区', en: 'Eastern District' },
-    { val: '南区', cn: '南区', en: 'Southern District' },
-    { val: '湾仔区', cn: '湾仔区', en: 'Wan Chai District' },
-    { val: '九龙区', cn: '九龙区', en: 'Kowloon City District' },
-    { val: '观塘区', cn: '观塘区', en: 'Kwun Tong District' },
-    { val: '深水埗区', cn: '深水埗区', en: 'Sham Shui Po District' },
-    { val: '黄大仙区', cn: '黄大仙区', en: 'Wong Tai Sin District' },
-    { val: '油尖旺区', cn: '油尖旺区', en: 'Yau Tsim Mong District' },
-    { val: '离岛区', cn: '离岛区', en: 'Island District' },
-    { val: '葵青区', cn: '葵青区', en: 'Kwai Tsing District' },
-    { val: '北区', cn: '北区', en: 'North District' },
-    { val: '西贡区', cn: '西贡区', en: 'Sai Kung District' },
-    { val: '沙田区', cn: '沙田区', en: 'Sha Tin District' },
-    { val: '大埔区', cn: '大埔区', en: 'Tai Po District' },
-    { val: '荃湾区', cn: '荃湾区', en: 'Tsuen Wan District' },
-    { val: '屯门区', cn: '屯门区', en: 'Tuen Mun District' },
-    { val: '元朗区', cn: '元朗区', en: 'Yuen Long District ' }
+  area = [{
+    val: '中西区',
+    cn: '中西区',
+    en: 'Central and Western District'
+  },
+  {
+    val: '东区',
+    cn: '东区',
+    en: 'Eastern District'
+  },
+  {
+    val: '南区',
+    cn: '南区',
+    en: 'Southern District'
+  },
+  {
+    val: '湾仔区',
+    cn: '湾仔区',
+    en: 'Wan Chai District'
+  },
+  {
+    val: '九龙区',
+    cn: '九龙区',
+    en: 'Kowloon City District'
+  },
+  {
+    val: '观塘区',
+    cn: '观塘区',
+    en: 'Kwun Tong District'
+  },
+  {
+    val: '深水埗区',
+    cn: '深水埗区',
+    en: 'Sham Shui Po District'
+  },
+  {
+    val: '黄大仙区',
+    cn: '黄大仙区',
+    en: 'Wong Tai Sin District'
+  },
+  {
+    val: '油尖旺区',
+    cn: '油尖旺区',
+    en: 'Yau Tsim Mong District'
+  },
+  {
+    val: '离岛区',
+    cn: '离岛区',
+    en: 'Island District'
+  },
+  {
+    val: '葵青区',
+    cn: '葵青区',
+    en: 'Kwai Tsing District'
+  },
+  {
+    val: '北区',
+    cn: '北区',
+    en: 'North District'
+  },
+  {
+    val: '西贡区',
+    cn: '西贡区',
+    en: 'Sai Kung District'
+  },
+  {
+    val: '沙田区',
+    cn: '沙田区',
+    en: 'Sha Tin District'
+  },
+  {
+    val: '大埔区',
+    cn: '大埔区',
+    en: 'Tai Po District'
+  },
+  {
+    val: '荃湾区',
+    cn: '荃湾区',
+    en: 'Tsuen Wan District'
+  },
+  {
+    val: '屯门区',
+    cn: '屯门区',
+    en: 'Tuen Mun District'
+  },
+  {
+    val: '元朗区',
+    cn: '元朗区',
+    en: 'Yuen Long District '
+  }
   ]
 let menuArrayIndexs = [],
   menuDataIndexs = [],
@@ -431,9 +589,9 @@ const global = {
         en4: '業績錢包',
         en5: '個人錢包',
         en6: '重消錢包',
-        en7: '本週直推獎',
-        en8: '本週輔導獎',
-        en9: '本週團隊獎',
+        en7: '直推獎',
+        en8: '輔導獎',
+        en9: '團隊獎',
         en10: '創業獎',
         en11: '歷史總收入',
         en12: '距離下次升級',
@@ -638,14 +796,14 @@ const global = {
         editpassword2: '請再次輸入初始密碼',
         editpassword3: '該密碼和初始密碼不一致',
         edituserinfo2: '確認推薦和接收關係',
-        ruid: '推薦者真實姓名',
-        editruid: '請輸入推薦者真實姓名',
+        ruid: '推薦者姓名',
+        editruid: '請輸入推薦者姓名',
         ruName: '推薦者名稱',
         receiveMode: '接收模式',
         receiveModes1: '手動',
         receiveModes2: '自動',
-        suid: '接收者真實姓名',
-        editsuid: '請輸入接收者真實姓名',
+        suid: '接收者姓名',
+        editsuid: '請輸入接收者姓名',
         suName: '接收者名稱',
         track: '接收位置',
         submit: '提交',
@@ -928,8 +1086,8 @@ const global = {
         editpaymentPassword1: '再次確認安全密碼',
         editpaymentPassword3: '該密碼和安全密碼不一致',
         edituserinfo2: '確認推薦和接收關係',
-        ruid: '推薦者真實姓名',
-        editruid: '請輸入推薦者真實姓名',
+        ruid: '推薦者姓名',
+        editruid: '請輸入推薦者姓名',
         ruName: '推薦者名稱',
         receiveMode: '接收模式',
         receiveModes1: '手動',
@@ -1135,11 +1293,12 @@ const global = {
     },
     password: {
       cn: {
-        editPassword: '修改密碼',
-        oldPassword: '原密碼',
+        editPassword: '更改密碼',
+        oldPassword: '舊密碼',
         editoldPassword: '請輸入原密碼',
         newPassword: '新密碼',
         editnewPassword: '請輸入新密碼',
+        editnewPassword1: '6-8個字符(最少一個英文)',
         passwordConfirmation: '密碼確認',
         editpasswordConfirmation: '請再次輸入新密碼',
         editpasswordConfirmation1: '該密碼和新密碼不一致',
@@ -1152,7 +1311,7 @@ const global = {
         en5: '請輸入公司地址',
         en6: '請輸入聯繫方式',
         en7: '內容編輯',
-        en8: '安全密碼'
+        en8: '系統交易密碼'
       },
       en: {
         editPassword: 'Change Password',
@@ -1518,9 +1677,9 @@ const global = {
         RootAlgebra: 'root代數',
         Algebra1: '代數 1',
         uid: '編號',
-        mobile: '登入ID',
+        mobile: '登錄賬號',
         compellation: '中文名稱',
-        EnglishName: '負責人負責人英文名稱',
+        EnglishName: '負責人英文名稱',
         create_time: '註冊日期',
         rank: '配套',
         level: '榮銜級別',
@@ -1989,7 +2148,7 @@ const global = {
         submitTxt: '提交成功',
         en1: '銀行信息管理',
         en2: '銀行資料',
-        en3: '請填寫您在億嘉系統上設置的支付安全密碼',
+        en3: '請填寫您在翊豐系統上設置的支付安全密碼',
         en4: '上傳附件',
         en5: '上傳文件不可大於2048kb',
         en6: '文件格式不正確'
@@ -2007,7 +2166,7 @@ const global = {
         submitTxt: 'Submitted Successfully',
         en1: 'Bank Information Management',
         en2: 'Bank Information',
-        en3: 'Please fill in the payment security code that you set up on the Yi Jia system',
+        en3: 'Please fill in the payment security password you set on the HSBC system.',
         en4: 'Upload Attachment',
         en5: 'Upload file can not be greater than 2048kb',
         en6: 'File format is incorrect'
@@ -2024,12 +2183,22 @@ const global = {
       }
     }
   },
-  nationalitysWin: [
-    { val: '0', cn: '香港窗口', en: 'Hong Kong Window' }
+  nationalitysWin: [{
+    val: '0',
+    cn: '香港窗口',
+    en: 'Hong Kong Window'
+  }
     // , {val: "1", cn: "大陆窗口", en: "Continental window"}
   ],
-  nationalitys: [
-    { val: '0', cn: '香港', en: 'Hong Kong' }, { val: '1', cn: '大陆', en: 'Continent' }
+  nationalitys: [{
+    val: '0',
+    cn: '香港',
+    en: 'Hong Kong'
+  }, {
+    val: '1',
+    cn: '大陆',
+    en: 'Continent'
+  }
     // , {val: "2", cn: "台湾", en: "Taiwan"}
   ],
   updateUserInfo (data) {
@@ -2053,7 +2222,9 @@ function commandEntity (parameters) {
 function parseResponse (_data) {
   switch (_data.result) {
     case 'url':
-      if (isURL(_data.data)) { window.top.location.replace(_data.data) }
+      if (isURL(_data.data)) {
+        window.top.location.replace(_data.data)
+      }
       return
   }
 
@@ -2101,14 +2272,14 @@ const api = (vue, apiName, params, callback, errorCallback, allData, isForm, isA
         if (res.root) res.data.root = res.root
         if (callback) callback(allData ? res : res.data)
         break
-            case 'login':
+      case 'login':
         // if (window.location.pathname.split("/").reverse()[0] !== "login.html") {
         //   sessionStorage.setItem("gotoLogin", window.location.href);
         //   location.href = "../auth/login.html";
         // }
         vue.$router.push('/')
         break
-            case 'failure':
+      case 'failure':
       case 'inexistence':
       case 'mobile':
       case 'referee':
@@ -2132,11 +2303,11 @@ const api = (vue, apiName, params, callback, errorCallback, allData, isForm, isA
         if (errorCallback) errorCallback(res.result, ajaxResLang)
         console.log(apiName, res.result, ajaxResLang[vue.lang.lang][res.result])
         break
-            default:
+      default:
         if (!arePop) vue.$message.error(res.result)
         if (errorCallback) errorCallback(res.result, ajaxResLang)
         break
-        }
+    }
   } else {
     ajax(apiUrl + apiName, params, res => {
       // console.log(res);
@@ -2146,14 +2317,14 @@ const api = (vue, apiName, params, callback, errorCallback, allData, isForm, isA
           if (res.root) res.data.root = res.root
           if (callback) callback(allData ? res : res.data)
           break
-                case 'login':
+        case 'login':
           // if (window.location.pathname.split("/").reverse()[0] !== "login.html") {
           //   sessionStorage.setItem("gotoLogin", window.location.href);
           //   location.href = "../auth/login.html";
           // }
           vue.$router.push('/')
           break
-                case 'failure':
+        case 'failure':
         case 'inexistence':
         case 'mobile':
         case 'referee':
@@ -2177,13 +2348,16 @@ const api = (vue, apiName, params, callback, errorCallback, allData, isForm, isA
           if (errorCallback) errorCallback(res.result, ajaxResLang)
           console.log(apiName, res.result, ajaxResLang[vue.lang.lang][res.result])
           break
-                default:
+        default:
           if (!arePop) vue.$message.error(res.result)
           if (errorCallback) errorCallback(res.result, ajaxResLang)
           break
-            }
+      }
     }, isForm)
   }
 }
 
-export { global, api }
+export {
+  global,
+  api
+}
