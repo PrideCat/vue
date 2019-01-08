@@ -150,7 +150,7 @@
           orderNumber: "",
           uid: "",
           startDate:`${mYear}-${mMonth}-01`,
-          endDate:`${mMonth==12?mYear+1:mYear}-${mMonth==12?'01':mMonth+1}-01`,
+          endDate:`${mMonth==12?mYear+1:mYear}-${mMonth==12?'01':(mMonth*1+1<10?"0"+(mMonth*1+1):mMonth*1+1)}-01`,
           no: 1, 
           size: 10
         },
@@ -173,9 +173,9 @@
         this.init();
       },
       init(){
-        // let search = JSON.parse(JSON.stringify(this.search));
-        // if(search.trace)search.trace *=1; 
-        this.api(this, '/manager/commodity/order/retrive', this.search, res => {
+        let search = JSON.parse(JSON.stringify(this.search));
+        if(search.trace)search.trace *=1; 
+        this.api(this, '/manager/commodity/order/retrive', search, res => {
           console.log(res);
           this.tableData = res.items;
           this.record = res.record;
